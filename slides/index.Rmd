@@ -19,6 +19,41 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+---
+
 ## :~ teacher$ whoami
 
 Sayin this and that cause this and that was missin
+
+---
+
+class: center, middle
+
+### Who Are You ? 
+
+
+--- 
+
+class: center, middle
+
+### What Is a [Hacker](https://www.google.com/search?q=what+is+a+hacker&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjpiuT6kdbkAhUjxosKHTfNCHAQ_AUIEigB&biw=1199&bih=675)
+
+
+--- 
+
+### Why Would a Historian Want to Program? 
+
+- Regular Expressions
+- Text Mining 
+- **A**pplication **P**rogramming **I**nterfaces
+- data packages
+- Visualization
+- Reproducibility
+- Code Is Communication Channel
+- ... 
+
+
+---
+
+
+
