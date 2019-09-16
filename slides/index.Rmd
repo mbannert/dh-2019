@@ -1,0 +1,24 @@
+---
+title: "Hacking for Historians"
+subtitle: "An Introduction to Digital History with R"
+author: "Matthias Bannert** (@whatsgoodio) and Ina Serif++"
+institute: "ETH Zurich**, Uni Basel++"
+date: "2019-09-25"
+output:
+  xaringan::moon_reader:
+    css: ["robot-fonts","more.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## :~ teacher$ whoami
+
+Sayin this and that cause this and that was missin
