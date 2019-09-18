@@ -15,45 +15,166 @@ output:
       ratio: '16:9'
 ---
 
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+options(htmltools.dir.version = FALSE)
 ```
 
 ---
 
-## :~ teacher$ whoami
+##  teachers:~$ whoami
 
-Sayin this and that cause this and that was missin
+.pull-left[
+
+### Matthias Bannert ([@whatsgoodio](https://twitter.com/whatsgoodio))
+
+- Data DevOps @KOF, ETH Zurich 
+- PhD in Economics 
+- 20+ years programming experience
+ 
+]
+
+.pull-right[
+
+### Ina Serif
+
+]
+
+**course material**: [github.com/mbannert/dh-2019](https://github.com/mbannert/dh-2019)
+
+
+
+---
+
+## Who Are You?
 
 ---
 
 class: center, middle
 
-### Who Are You ? 
+## Why Would a Historian Want to Program? 
+
+<!--
+Show demos
+1. API examples
+2. visualization 
+3. Text Mining & Regular Expressions
+-->
 
 
---- 
-
-class: center, middle
-
-### What Is a [Hacker](https://www.google.com/search?q=what+is+a+hacker&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjpiuT6kdbkAhUjxosKHTfNCHAQ_AUIEigB&biw=1199&bih=675)
+---
 
 
---- 
+## Why Would a Historian Want to Program? 
 
-### Why Would a Historian Want to Program? 
 
-- Regular Expressions
-- Text Mining 
-- **A**pplication **P**rogramming **I**nterfaces
-- data packages
+- Access to Data Sources (**A**pplication **P**rogramming **I**nterfaces) 
+
+
+
+---
+
+
+## Why Would a Historian Want to Program? 
+
+
+- Access to Data Sources (**A**pplication **P**rogramming **I**nterfaces) 
+
 - Visualization
-- Reproducibility
-- Code Is Communication Channel
-- ... 
 
 
 ---
+
+
+## Why Would a Historian Want to Program? 
+
+
+- Access to Data Sources (**A**pplication **P**rogramming **I**nterfaces) 
+
+- Visualization
+
+- Text Mining & Regular Expressions
+
+---
+
+## Why Would a Historian Want to Program? 
+
+
+- Access to Data Sources (**A**pplication **P**rogramming **I**nterfaces) 
+
+- Visualization
+
+- Text Mining & Regular Expressions
+
+- Reproducibility
+
+
+
+---
+
+
+## Why Would a Historian Want to Program? 
+
+
+- Access to Data Sources (**A**pplication **P**rogramming **I**nterfaces) 
+
+- Visualization
+
+- Text Mining & Regular Expressions
+
+- Reproducibility
+
+- Code as Communication Channel
+
+- ...
+
+
+---
+
+## Background Poll
+
+
+```{r,echo=FALSE}
+library(grid)
+library(shiny)
+source("../R/bullet.R")
+fluidPage(sidebarLayout(sidebarPanel(
+  numericInput("members", "Number of participants", 20),
+  numericInput("rstats", "R Statistical langauge", 8),  
+  numericInput("html", "HTML/CSS/JS devs", 8),
+  numericInput("shiny", "shiny framework", 8)
+  ),
+  mainPanel(
+    renderPlot({
+      techavg <- mean(c(input$rstats,
+                        input$html,
+                        input$shiny) / input$members)*100
+  df1 <- data.frame(units = c("R(%)","WebDev(%)","shiny(%)"),
+                    low = c(25,25,25),
+                    mean = c(50,50,50),
+                    high = c(100,100,100),
+                    target = c(techavg,techavg,techavg),
+                    value = c(100*(input$rstats/input$members),
+                              100*(input$html/input$members),
+                              100*(input$shiny/input$members)
+                              )
+                    )
+  g <- gridBulletGraphH(df1,bcol = c("#999999","#CCCCCC","#E1E1E1"),
+                   vcol = "#333333",font = 20)
+  g + title(paste("Usage of Technologies Among Participants", sep=" "))
+})  
+    )
+  ))
+```
+
+---
+
+## Several introduction slides here... 
+
+---
+
+## Some tasks
+
 
 
 
