@@ -36,7 +36,11 @@ options(htmltools.dir.version = FALSE)
 
 .pull-right[
 
-### Ina Serif
+### Ina Serif ([@wissen_ist_acht](https://twitter.com/wissen_ist_acht))
+
+- assistant/post doc, Uni Basel
+- PhD in Medieval History; digital historian
+- 20+ hrs programming experience
 
 ]
 
