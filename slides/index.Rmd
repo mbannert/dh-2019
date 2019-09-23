@@ -22,7 +22,7 @@ options(htmltools.dir.version = FALSE)
 
 ---
 
-##  teachers:~$ whoami
+## teachers:~$ whoami
 
 .pull-left[
 
@@ -49,6 +49,8 @@ options(htmltools.dir.version = FALSE)
 
 
 ---
+
+class: center, middle
 
 ## Who Are You?
 
@@ -137,47 +139,69 @@ Show demos
 
 ## Background Poll
 
-
-```{r,echo=FALSE}
-library(grid)
-library(shiny)
-source("../R/bullet.R")
-fluidPage(sidebarLayout(sidebarPanel(
-  numericInput("members", "Number of participants", 20),
-  numericInput("rstats", "R Statistical langauge", 8),  
-  numericInput("html", "HTML/CSS/JS devs", 8),
-  numericInput("shiny", "shiny framework", 8)
-  ),
-  mainPanel(
-    renderPlot({
-      techavg <- mean(c(input$rstats,
-                        input$html,
-                        input$shiny) / input$members)*100
-  df1 <- data.frame(units = c("R(%)","WebDev(%)","shiny(%)"),
-                    low = c(25,25,25),
-                    mean = c(50,50,50),
-                    high = c(100,100,100),
-                    target = c(techavg,techavg,techavg),
-                    value = c(100*(input$rstats/input$members),
-                              100*(input$html/input$members),
-                              100*(input$shiny/input$members)
-                              )
-                    )
-  g <- gridBulletGraphH(df1,bcol = c("#999999","#CCCCCC","#E1E1E1"),
-                   vcol = "#333333",font = 20)
-  g + title(paste("Usage of Technologies Among Participants", sep=" "))
-})  
-    )
-  ))
-```
+<iframe src="http://127.0.0.1:1234" width="900px" height="450px"></iframe>
 
 ---
 
-## Several introduction slides here... 
+## Check Your Stack
+
+- R 3.5.1+
+- R Studio 1.2.1335+
+- git (optional)
 
 ---
 
-## Some tasks
+## Summary: Introduction to the R Studio IDE
+
+- R is **NOT** R Studio
+- 4 Panes
+- script window vs. console
+- cmd + enter (osx), ctrl + enter (PC) runs selected command
+- ctrl 1,2 switches between console and script
+- R Studio Cheat Sheets
+- use Projects (.Rproj)! 
+
+
+---
+
+## Summary: R Basics 
+
+- Assignment operator '<-'
+- '#' starts a comment. 
+- important base R types: vector, matrix, data.frame, list
+- Read code from the inside out
+- learn basic syntax, understand the rest 
+- the **tidyverse** and **data.table** are frameworks of their within R
+- [CRAN](https://cran.r-project.org) is the Official R (package) repository. 
+
+---
+
+
+## Are You Ready?
+
+1. Of what data type is the built-in dataset *mtcars*
+2. Create vector containing three integers.
+3. Create a 2x2 matrix of integers.
+4. Create a data.frame that contains a column of letters and 
+a column of integers.
+5. Create a list that contains all elements produced in tasks 2-4
+6. Install a package from CRAN and load the library. 
+
+
+---
+
+## Resources
+
+- ?function_name calls R documentation
+- [Official Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf) ( chapter 2)
+- [Stackoverflow questions tagged R](http://stackoverflow.com/questions/tagged/r)
+- [Achim Zeileis: Introduction to R](https://eeecon.uibk.ac.at/~zeileis/teaching/R-Intro/)
+- [CRAN](https://cran.r-project.org)
+- [CRAN Task Views (CTV)](https://cran.r-project.org/web/views/)
+
+
+
+
 
 
 
