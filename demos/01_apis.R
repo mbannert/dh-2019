@@ -1,6 +1,8 @@
 # Get umbrellas from the MET ?
 library(jsonlite)
 
+# https://metmuseum.github.io/
+
 # Write a custom function
 # to keep everything private, avoid global objects !
 download_met_images_by_id <- function(ids,

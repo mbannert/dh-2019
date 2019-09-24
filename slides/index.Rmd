@@ -143,7 +143,15 @@ Show demos
 
 ---
 
-## Check Your Stack
+## What is R? 
+
+- R Language for Statistical Computing
+- Interpreted Language (Similar to Python, unlike C++)
+- 25+ years old, started as a domain specific language (statistics), used in plethora of fields today thanks to 
+13K+ extension packages
+
+
+**Check Your Stack**
 
 - R 3.5.1+
 - R Studio 1.2.1335+
@@ -190,7 +198,7 @@ a column of integers.
 
 ---
 
-## Resources
+## Resources -- How to Get Help
 
 - ?function_name calls R documentation
 - [Official Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf) ( chapter 2)

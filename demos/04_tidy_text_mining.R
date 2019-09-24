@@ -23,15 +23,21 @@ bigrams_filtered <- bigrams_separated %>%
 bigram_counts <- bigrams_filtered %>%
   count(word1, word2, sort = TRUE)
 
+
+bigram_counts
+
 bigrams_united <- bigrams_filtered %>%
   unite(bigram, word1, word2, sep = " ")
 
-bigrams_united
+bigrams_united %>%
+  group_by(bigram) %>%
+  count(sort = TRUE) %>%
+  print(n=50)
 
 
-bigrams_filtered %>%
-  filter(word2 == "street") %>%
-  count(book, word1, sort = TRUE)
+# Analyzing bigrams
+# term frequency–inverse document frequency
+# A high weight in tf–idf is reached by a high term frequency (in the given document) and a low document frequency of the term in the whole collection of documents; the weights hence tend to filter out common terms
 
 
 bigram_tf_idf <- bigrams_united %>%
@@ -39,10 +45,16 @@ bigram_tf_idf <- bigrams_united %>%
   bind_tf_idf(bigram, book, n) %>%
   arrange(desc(tf_idf))
 
-bigram_tf_idf
 
-
-
+library(ggplot2)
+bigram_tf_idf %>%
+  group_by(book) %>%
+  top_n(10) %>%
+  ungroup() %>%
+  ggplot(aes(bigram, tf_idf)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ book, scales = "free_y") +
+  coord_flip()
 
 
 
