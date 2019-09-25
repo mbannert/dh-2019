@@ -8,6 +8,10 @@ class(m)
 
 mr <- matrix(c(1:9), nrow = 3)
 
+mr[2,3]
+mr[2,]
+mr[,2]
+
 # Note the boolean param!
 dframe <- data.frame(n = 1:5, ltrs = letters[1:5],
                      stringsAsFactors = FALSE)

@@ -16,3 +16,12 @@ Note: This introductory session will likely be a bit shorter than the regular se
 
 ### 9.10.: available soon.
 
+
+
+## Resources 
+
+- [Official Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf) ( chapter 2)
+- [Stackoverflow questions tagged R](http://stackoverflow.com/questions/tagged/r)
+- [CRAN](https://cran.r-project.org)
+- [CRAN Task Views (CTV)](https://cran.r-project.org/web/views/)
+

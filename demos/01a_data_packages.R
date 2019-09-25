@@ -16,3 +16,5 @@ library(fivethirtyeight)
 
 library(kofdata)
 tsl <- get_time_series("ch.kof.barometer")
+
+tstools::tsplot(tsl)
