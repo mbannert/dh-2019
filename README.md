@@ -34,4 +34,4 @@ Don't forget to tell us about what you are interested in, e.g., specific data so
 - [Stackoverflow questions tagged R](http://stackoverflow.com/questions/tagged/r)
 - [CRAN](https://cran.r-project.org)
 - [CRAN Task Views (CTV)](https://cran.r-project.org/web/views/)
-
+- http://scottbot.net/argument-clinic/
