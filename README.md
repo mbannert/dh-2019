@@ -15,10 +15,11 @@ as several advanced examples requiring local servers are needed in order to disp
 
 bi-weekly: 25.9, 9.10. 23.10, 6.11, 20.11, 4.12, 18.12
 
-### 9.10.: Breaking down R Code
+### 9.10.: Breaking down R Code | Exploring data /w R
 
-This session teaches R basics in an 'eat-cake-first' approach. That is, we take a real world R function from session 1 and break it down line-by-line, learning the basics along the way. Learn about object creation, basic data types, indexing, scoping and applying functions over lists all while going through to a useful, reasonably complex piece of code as opposed to Mickey Mouse examples that start with the building blocks.
- 
+This session teaches R basics in an 'eat-cake-first' approach. That is, we take a relatively complex R function from session 1 and break it down line-by-line, learning the basics along the way. Learn about object creation, basic data types, indexing, scoping and applying functions over lists all while going through to a useful piece of code as opposed to Mickey Mouse examples that were designed to start with the building blocks.
+
+Part 2 of the session will add data to the mix. We look at how to read in data from files and APIs. But most importantly we will develop basic strategies for exploratory data analysis. 
 
 
 ### 25.9.: Inspiration, Motivation and Setup
