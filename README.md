@@ -15,9 +15,10 @@ as several advanced examples requiring local servers are needed in order to disp
 
 bi-weekly: 25.9, 9.10. 23.10, 6.11, 20.11, 4.12, 18.12
 
-### 9.10.: R Basics, Practicing basic R in the group
+### 9.10.: Breaking down R Code
 
- This session discusses basic R concepts and practices moving around in R. Among other examples we will work with the **examples from the read-at-home-assignment**.  
+This session teaches R basics in an 'eat-cake-first' approach. That is, we take a real world R function from session 1 and break it down line-by-line, learning the basics along the way. Learn about object creation, basic data types, indexing, scoping and applying functions over lists all while going through to a useful, reasonably complex piece of code as opposed to Mickey Mouse examples that start with the building blocks.
+ 
 
 
 ### 25.9.: Inspiration, Motivation and Setup
