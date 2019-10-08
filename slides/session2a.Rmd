@@ -23,10 +23,83 @@ options(htmltools.dir.version = FALSE)
 
 ## Exploring Built-In Data 
 
+Show all dataset available from currently loaded packages.
 ```{r, eval=FALSE}
 data()
 ```
 
 ---
+
+
+## Exploring Built-In Data 
+
+Show all dataset available from currently loaded packages.
+```{r, eval=FALSE}
+data()
+```
+
+Load a specific dataset from the library *historydata*
+
+```{r}
+library(historydata)
+data("catholic_dioceses")
+```
+
+---
+
+
+
+## Exploring Built-In Data 
+
+Show all dataset available from currently loaded packages.
+```{r, eval=FALSE}
+data()
+```
+
+
+Load a specific dataset from the library *historydata*
+```{r}
+library(historydata)
+data("catholic_dioceses")
+```
+
+
+See what's in memory. <br> 
+Note that there can be multiple datasets in memory at the same time!
+
+```{r}
+data("paulist_missions")
+ls()
+```
+
+---
+
+## Task 2:  Functions to Explore Dataset
+
+Try out some functions to explore datasets from the 
+*historydata*, *janeaustenr* and *fivethirtyeight*  packages or 
+R's built-in datasets.
+
+```{r, eval=FALSE}
+str()
+summary()
+length()
+nrow()
+class()
+pairs()
+plot()
+```
+
+Does each function work for with each dataset? Is the output of, e.g., summary the same for all datasets?
+
+
+## Writing Datasets to the File System
+
+
+## Reading Data into R 
+
+
+
+
 
 
