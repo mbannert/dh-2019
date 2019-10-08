@@ -1,0 +1,224 @@
+---
+title: "Breaking Down Code"
+subtile: "Understanding Our Simple MET Downloader"
+date: "10/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Function Definitions and Function Calls
+
+First, let's understand that the first chunk of code after the 
+*library* call is a function definition. To do so, let's move
+the function defintion to a separate file: 
+
+**copy and paste lines 8-21 into a separate file: R/download_met_images.R  !**
+
+and source it later on:
+
+```{r, echo=TRUE, eval=FALSE}
+library(jsonlite)
+source("R/download_met_images.R")
+
+```
+
+Also notice the call to the Jeroen Ooms' library jsonlite. 
+It does all the hard work to process the [JSON](https://json.org/) format. 
+
+**finally call the function**
+
+```{r, echo=TRUE, eval=FALSE}
+# id is an idea from the umbreall example
+# we'll see later on how to obtain ids
+download_met_images_by_id(158043)
+```
+
+## Frame of a Function
+
+```{r, echo=TRUE, eval=FALSE}
+name_of_function <- function(parameter_1,
+                             parameter_2){
+  # body of the function
+  # whatthe function should do given
+  # its parameters (arguments)
+  result <- (parameter_1 * parameter_2) + pi 
+
+  # Note returns are implicit, yet
+  return(result)
+  # works
+}
+
+```
+
+Use either `r emo::ji("snake")` -case `r emo::ji("camel")` -case
+to name functions: 
+
+- snake_case
+- camelCase
+
+## Reading from the inside out
+
+1. What does *sprintf* do?
+Hint: Run *?sprintf* in the console.
+
+```{r}
+
+sprintf("Put some %s together","text")
+
+```
+
+2. What does this mean for the URL taken from the MET documentation?
+Note that *158043* is an example id taken from the umbrella search example.
+
+```{r}
+sprintf("https://collectionapi.metmuseum.org/public/collection/v1/objects/%s", 158043)
+```
+
+3. Visit the URL! 
+If you use Firefox as a browser (or read the MET documentation carefully),
+you will realize that the return is not just some text,
+but that it's formatted in a special way. The format is called [JSON](https://json.org)
+and it is one of the most popular data exchange formats on the web. 
+
+## Processing JSON
+
+Whenever there some standard thing, bet there is an R package for it. In this case there are even multiple R packages to process JSON. We recommend to use the jsonlite package which is backed by R Studio and created by Jeroen Ooms. 
+
+Run 
+
+```{r, eval=FALSE, echo=TRUE}
+
+?jsonlite::fromJSON
+
+```
+
+to see how it works. 
+
+
+## Understanding list apply (lapply)
+
+
+```{r}
+
+# apply a function to every element of a list
+li <- list(a = c(1,2,3),
+           b = c(3,2,1),
+           d = c(1,1,1))
+
+lapply(li, sum)
+lapply(li, cumsum)
+lapply(li, mean)
+
+
+```
+
+## Combine what we've seen so far.
+
+```{r, echo=FALSE}
+library(jsonlite)
+```
+
+
+```{r}
+obj_list <- lapply(c(158043,104836), function(x) {
+  req <- sprintf("https://collectionapi.metmuseum.org/public/collection/v1/objects/%s", x)
+  fromJSON(req)
+})
+
+```
+
+Examine the resulting R object
+
+```{r, echo=TRUE, eval=FALSE}
+## Have a look at the object list
+class(obj_list)
+str(obj_list)
+```
+
+## Understanding Indices
+
+In R we have:
+
+- *()* braces. This is were parameters of a function live. 
+- *{}* curly braces. This is were the body of a function or condition lives.
+- **[ ]** squared brackets. These are used to refer to parts of an object. Most commonly indices are used to build subsets.
+
+```{r}
+li_one <- list(a = c(1,2,3),
+               b = c(4,5,6))
+
+li[1]
+class(li[1])
+li[[1]]
+class(li[[1]])
+
+li_two <- list(a = c("a","b","c"),
+               b = c("d","e","f"))
+
+
+```
+
+## Understanding the [[ trick
+
+```{r}
+li_all <- list(li_one,li_two)
+lapply(li_all,"[[","a")
+```
+
+Let's put this trick to work with our code:
+
+```{r}
+img_urls <- lapply(obj_list, "[[", "primaryImage")
+```
+
+Prepare to loop / apply over all URLs of images
+
+```{r}
+seq_along(img_urls)
+```
+
+
+## Apply an **Anonymous** Function to All Elements of img_urls
+
+```{r, eval=FALSE, echo=TRUE}
+lapply(seq_along(img_urls), function(x) {
+
+  download.file(img_urls[[x]],
+                destfile = sprintf("data/%d.jpg", x)
+
+  )
+})
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

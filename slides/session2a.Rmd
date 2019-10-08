@@ -1,0 +1,32 @@
+---
+title: "Hacking for Historians"
+subtitle: "Programming with Data"
+author: "Matthias Bannert** (@whatsgoodio) and Ina Serif++"
+institute: "ETH Zurich**, Uni Basel++"
+date: "2019-09-25"
+output:
+  xaringan::moon_reader:
+    css: ["robot-fonts","more.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+## Exploring Built-In Data 
+
+```{r, eval=FALSE}
+data()
+```
+
+---
+
+
