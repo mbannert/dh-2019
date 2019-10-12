@@ -47,3 +47,4 @@ Don't forget to tell us about what you are interested in, e.g., specific data so
 - [CRAN](https://cran.r-project.org)
 - [CRAN Task Views (CTV)](https://cran.r-project.org/web/views/)
 - http://scottbot.net/argument-clinic/
+- https://rstudio.com/resources/cheatsheets/
