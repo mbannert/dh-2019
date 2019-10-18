@@ -1,6 +1,6 @@
 ---
 title: "Hacking for Historians"
-subtitle: "Programming with Data"
+subtitle: "Introduction to Exploring Data with R"
 author: "Matthias Bannert** (@whatsgoodio) and Ina Serif++"
 institute: "ETH Zurich**, Uni Basel++"
 date: "2019-09-25"
@@ -74,6 +74,52 @@ ls()
 
 ---
 
+
+## Types of datasets: time series
+
+```{r}
+ts2 <- ts(rnorm(20),
+          start = c(1995,1),
+          frequency = 4)
+ts2
+```
+
+examples: monthly revenues over time, stocks, aggregated log files
+
+---
+
+## Types of datasets: cross sectional data
+
+```{r}
+head(mtcars)
+```
+
+- multiple variables
+- one period
+
+---
+
+## Types of datasets: panel data
+
+- multiple variables
+- longitudinal data 
+- e.g. German Socio-Economic Panel (GSOEP)
+
+---
+
+## Nested data structures
+
+```{r}
+l <- list()
+l$element1 <- 2
+l$element2 <- head(mtcars,4)
+l
+```
+
+examples: meta information, sector classification (hierarchical), GDP components, translations, attributes, properties, [Geo spatial data](https://github.com/mbannert/maps/blob/master/ch_bfs_regions.geojson)
+
+---
+
 ## Task 2:  Functions to Explore Dataset
 
 Try out some functions to explore datasets from the 
@@ -93,10 +139,41 @@ plot()
 Does each function work for with each dataset? Is the output of, e.g., summary the same for all datasets?
 
 
-## Writing Datasets to the File System
+---
 
+## Format vs. Structure
 
-## Reading Data into R 
+- Formats
+  - text formats: .csv, .json, .xml, .tsv, ...
+  - binary formats: .RData, .dta
+  - propietary formats: .xls(x), .dta
+  
+- Structure
+  - 
+  
+--- 
+
+## Swiss Army Knifing Formats
+
+.pull-left[
+R handles a plethora of structure and format combinations using its packages, e.g., 
+
+- data.table (fread, fwrite)
+- jsonlite (fromJSON, toJSON)
+- openxlsx
+- readxl
+- writexl
+- readr
+- readtext 
+- foreign
+- ... 
+]
+
+.pull-right[
+
+]
+
+---
 
 
 

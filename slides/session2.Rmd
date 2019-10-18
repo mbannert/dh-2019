@@ -67,6 +67,13 @@ class: center, middle
 <!-- => discussion: Up for debate: Can Inference beyond descriptive stuff.
 Can't be answered globally. But calling it failure to be able to automate stuff, is plain clickbaiting. -->
 
+---
+
+class: center, middle
+
+## Or in Other Words ...
+
+<img src="busy.png" width="600px">
 
 ---
 
@@ -106,6 +113,8 @@ Write an own wrapper function called *search_MET* that
 BONUS: Find / explain what the function should return in case there are no results found. 
 
 ---
+
+
 
 
 
