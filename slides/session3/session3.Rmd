@@ -1,0 +1,264 @@
+---
+title: "Hacking for Historians"
+subtitle: "Session 3 - Turning Text into Data"
+author: "Matthias Bannert** (@whatsgoodio) and Ina Serif++"
+institute: "ETH Zurich**, Uni Basel++"
+date: "2019-09-25"
+output:
+  xaringan::moon_reader:
+    css: ["robot-fonts","more.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+## Interactive vs. Batch
+
+![interactive](interactive.png)
+
+---
+
+## Explorative Data Analysis (EDA) / Interactive Techniques
+
+- keyword-in-context (kwic)
+- visualizations
+     - x-ray plots
+     - wordclouds
+     - ... 
+- ngrams 
+- tf-idf
+- ...
+
+
+---
+
+## Data Preparation
+
+- Tokenization
+- Cleaning
+    - stop words
+    - punctuation
+- Encoding
+
+---
+
+## High Level Packages for Quantitative Analysis of Textual Data
+
+- **quanteda** (recommended)
+- *tm*
+- *tidytext*
+- ...
+
+---
+
+## A *quanteda* Based Workflow: Basic Objects
+
+1. Corpus
+   - Saves character strings and variables in a data frame
+   - Combines texts with document-level variables
+2. Tokens
+   - Stores tokens in a list of vectors
+   - More efficient than character strings, but preserves positions of words
+3. Document Feature Matrix
+   - Represents frequencies of features in documents in a matrix
+   - The most efficient structure, but it does not have information on positions of words
+   - Non-positional (bag-of-words) analysis are profrmed using many of the textstat_* and textmodel_* functions
+
+---
+
+## Create a *quanteda* Corpus
+
+```{r corpus, message=FALSE, error=FALSE, warning=FALSE}
+library(readtext)
+library(quanteda)
+
+slides <- readtext("../../slides/*.Rmd")
+# Note how document names are given
+# automatically from doc_ids, that's why we tune
+# them a bit here and strip file extensions
+slides$doc_id <- gsub("\\.[A-Za-z]+","",slides$doc_id)
+corpus_slides <- corpus(slides)
+summary(corpus_slides)
+
+```
+
+---
+
+## Keywords-in-context (kwic) 
+
+```{r, eval=FALSE}
+kwic(corpus_slides, pattern = "programming")
+kwic(corpus_slides, "history", valuetype = "regex")
+
+```
+
+---
+
+## Task 3: Create a Corpus from Your Own Data
+
+1. Choose a folder on your computer that contains multiple plain text files, .pdfs or .docx documents.
+2. Read in all files of a specific format, e.g., .pdf or .docx in that folder. 
+3. Create a quanteda corpus, explore and summarize your corpus of documents.
+4. Discuss this technique of 'scanning' documents!
+
+---
+
+## Turning a Historical Source Into a Corpus
+
+```{r avis, message=FALSE, error=FALSE, warning=FALSE}
+library(readtext)
+library(quanteda)
+library(dplyr)
+
+# avisblatt example
+avis <- readtext("../../data/avis_1834.csv",
+                 text_field = "ad_content")
+avis$doc_id <- avis$id
+avis_corpus <- corpus(avis)
+summary(avis_corpus)
+
+```
+
+---
+
+## Extract a Document from a Corpus
+
+```{r avis-extract, message=FALSE, error=FALSE, warning=FALSE}
+
+texts(avis_corpus)['0c86562e-3f0b-54f5-97a5-4187d147925d/a12']
+
+```
+
+---
+
+## Yet Another kwic
+
+```{r avis-kwic, message=FALSE, error=FALSE, warning=FALSE}
+sale_kwic <- kwic(avis_corpus,
+     pattern = phrase("zu verkaufen"))
+# exclude "Frauenzimmer"
+real_restate <- kwic(avis_corpus,
+     pattern = "losament|^Zimmer|Kammer",
+     valuetype = "regex")
+
+avis_corpus %>%
+  summary() %>%
+  filter(Text %in% real_restate$docname) %>% 
+  head()
+
+```
+
+---
+
+## Visualization of kwic: X-Ray Plots
+
+```{r}
+textplot_xray(real_restate[1:10,])
+```
+
+
+## Task 4
+
+1. Reproduce the *Avisblatt* example above. Note: the .csv containing the data is available from the [course github repository](https://raw.githubusercontent.com/mbannert/dh-2019/master/data/avis_1834.csv)
+2. Can you guess what the Avisblatt source is?
+3. Discuss how you could make use of DH ideas to makes sense of the 1000 documents in the source!
+
+---
+
+class: center, middle
+
+## Are Wordclouds Useless? 
+
+---
+
+## Naive *Avisblatt* Wordcloud
+
+```{r avis-cloud1, message=FALSE, error=FALSE, warning=FALSE}
+avis_ra <- corpus_subset(avis_corpus,
+              id %in% real_restate$docname)
+avis_ra %>% 
+  dfm() %>% 
+  textplot_wordcloud()
+```
+
+---
+
+## Create Tokens
+
+```{r}
+tok_avis <- tokens(avis_ra)
+tok_avis[1]
+```
+
+---
+
+## Cleaning Tokens I
+
+```{r}
+tok_avis_clean <- tokens(avis_ra,
+                         remove_punct = TRUE,
+                         remove_numbers = TRUE)
+tok_avis_clean[2]
+```
+
+---
+
+## Cleaning Tokens II: Custom Stopwords
+
+```{r}
+bsl_stop <- c("in", "der", "die", "das","bis","no",
+              "dem", "den", "im", "und", "e",
+              "oder","auch","um", "zu", "so", "an",
+              "wie", "mit", "von", "ein", "einer",
+              "einen", "eine", "eines","einem",
+              "er", "sie", "als", "ist", "sich",
+              "es","auf", "für" , "am", "man",
+              "sind", "werden", "bey","des","à",
+              "et","a","wird", "haben", "gegen",
+              "habe","dr","pr","le", "de","st",
+              "diese","kann", "fr","dazu", "seyn",
+              "mir","vor","u","da","la")
+tok_avis_clean <- tokens_remove(tok_avis_clean,
+                                bsl_stop)
+tok_avis_clean[2]
+```
+
+---
+
+## Clean Cloud
+
+```{r}
+textplot_wordcloud(dfm(tok_avis_clean))
+```
+
+---
+
+## Task 5: Tokens & the Cloud
+
+1. Reproduce the Clean Cloud example for 
+a corpus subset of your choice, e.g., 'zu verkaufen' or the real estate example
+2. Discuss this way of reading through a large bunch of documents!
+
+<!--
+Next up term and ngram frequency concepts
+in quanteda this is handled by document 
+feature matrix, discuss: document feature matrix 
+-> maybe show avisblatt example theoretically? 
+-> other corpus? 
+
+-->
+
+
+
+
+
+
