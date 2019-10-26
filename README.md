@@ -3,9 +3,10 @@ Digital History Course Fall 2019
 
 ## Rendered Slides
 
-- [session 1 (25.9)](https://dh2019-session1.netlify.com)
-- [session 2 (9.10)](https://dh2019-session2.netlify.com)
+- [session 1 Motivation: Why Would Historians Want to Hack ?(25.9)](https://dh2019-session1.netlify.com)
+- [session 2 Breaking Down Code (9.10)](https://dh2019-session2.netlify.com)
 - [Intro to Exploring Data with R](https://dh2019-data-in-r.netlify.com)
+- [session 3 Turning Text Into Data (23.11)](https://dh2019-session3.netlify.com)
 
 Raw slides can be found in the /slides folder of this repository. However, knitting them can be a bit tricky
 as several advanced examples requiring local servers are needed in order to display all slides correctly. Hence, the above rendered version allow you to browse the slides w/o creating them locally. 
