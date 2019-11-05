@@ -1,0 +1,297 @@
+---
+title: "Hacking for Historians"
+subtitle: "Session 4 - Turning Text into Data Pt. II"
+author: "Matthias Bannert** (@whatsgoodio) and Ina Serif++"
+institute: "ETH Zurich**, Uni Basel++"
+date: "2019-11-6"
+output:
+  xaringan::moon_reader:
+    css: ["robot-fonts","more.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+
+library(readtext)
+library(quanteda)
+library(dplyr)
+library(ggplot2)
+
+# avisblatt example
+avis <- readtext("../../data/avis_1834.csv",
+                 text_field = "ad_content")
+avis$doc_id <- avis$id
+#avis$id <- NULL
+avis_corpus <- corpus(avis)
+
+bsl_stop <- c("in", "der", "die", "das","bis","no",
+              "dem", "den", "im", "und", "e",
+              "oder","auch","um", "zu", "so", "an",
+              "wie", "mit", "von", "ein", "einer",
+              "einen", "eine", "eines","einem",
+              "er", "sie", "als", "ist", "sich",
+              "es","auf", "für" , "am", "man",
+              "sind", "werden", "bey","des","à",
+              "et","a","wird", "haben", "gegen",
+              "habe","dr","pr","le", "de","st",
+              "diese","kann", "fr","dazu", "seyn",
+              "mir","vor","u","da","la", "daß",
+              "d","v","welche","diesen",
+              "dieses","hat","n","aus")
+
+
+avis_dfm <- avis_corpus %>%
+  tokens(remove_punct = TRUE,
+         remove_numbers = TRUE) %>%
+  tokens_remove(bsl_stop) %>%
+  dfm()
+
+```
+## Turning Text Into Data Pt. I
+
+- interactive computer assisted reading
+- scanning through documents
+- grasping content across documents
+
+```{r}
+real_restate <- kwic(avis_corpus,
+     pattern = "losament|^Zimmer|Kammer|Wohnung",
+     valuetype = "regex")
+
+head(real_restate, 3)
+
+
+```
+
+---
+
+class: center,middle
+
+## Today: Text Statistics and Modelling
+
+---
+
+## Revisit {quanteda}'s Document Feature Matrix (DFM)
+
+**Document Feature Matrix**
+
+   - Represents frequencies of features in documents in a matrix
+   - The most efficient structure, but it does not have information on positions of words
+   - Non-positional (bag-of-words) analysis are profrmed using many of the textstat_* and textmodel_* functions
+
+---
+
+
+## Breaking Down Document Feature Matrices
+
+```{r}
+avis_dfm
+```
+
+
+---
+
+## Breaking Down Document Feature Matrices
+
+```{r}
+avis_dfm
+```
+
+```{r}
+avis_dfm[1:2, 1:5]
+```
+
+---
+
+## Breaking Down Document Feature Matrices
+
+```{r}
+avis_dfm
+```
+
+```{r}
+avis_dfm[1:2, 1:5]
+```
+
+```{r}
+head(colSums(avis_dfm), 5)
+```
+
+---
+
+## Breaking Down Document Feature Matrices
+
+```{r}
+avis_dfm
+```
+
+```{r}
+avis_dfm[1:2, 1:5]
+```
+
+```{r}
+head(colSums(avis_dfm), 5)
+```
+
+```{r}
+head(rowSums(avis_dfm), 2)
+```
+
+---
+
+## Task 6: Reproduce a DFM
+
+1. Read in the avis data
+2. Turn the data into a {quanteda} corpus
+3. Create a DFM from the avis corpus
+4. Run basic diagnostics on the DFM !
+5. What are the dimensions of your DFM? 
+6. Discuss:
+    - potential applications of a DFM
+    - challenges when processing a DFM
+
+---
+
+## Text Statistics /w {quanteda}
+
+- textstat_collocations	Identify and score multi-word expressions
+- textstat_dist	Similarity and distance computation between documents or features
+- textstat_entropy	Compute entropy of documents or features
+- textstat_frequency	Tabulate feature frequencies
+- textstat_keyness	Calculate keyness statistics
+- textstat_lexdiv	Calculate lexical diversity
+- textstat_readability	Calculate readability
+- textstat_simil Similarity and distance computation between documents or features
+
+---
+
+## DFM Basics: Exploiting Scarcity
+
+```{r}
+slim_dfm <- dfm_trim(avis_dfm,
+                     min_termfreq = 10)
+topfeatures(slim_dfm)
+```
+
+```{r}
+nfeat(slim_dfm)
+```
+
+```{r}
+nfeat(avis_dfm)
+```
+
+---
+
+## Text Statistics: Feature Co-Occurence Matrix (FCM)
+
+```{r}
+fcm_avis <- fcm(slim_dfm)
+feat <- names(topfeatures(fcm_avis, 50))
+fcmat_avis_select <- fcm_select(fcm_avis,
+                                pattern = feat)
+dim(fcmat_avis_select)
+
+```
+
+```{r}
+fcm_avis["kammer","küche"]
+```
+
+```{r}
+head(fcm_avis,3)
+```
+
+---
+
+## Text Statistics: Visualization of a FCM
+
+```{r, eval=FALSE}
+s <- log(colSums(dfm_select(avis_dfm, feat)))
+set.seed(144)
+textplot_network(fcmat_avis_select,
+                 min_freq = .7,
+                 vertex_size = s / max(s) * 3)
+
+```
+
+---
+
+class: center,middle
+
+```{r, echo=FALSE}
+s <- log(colSums(dfm_select(avis_dfm, feat)))
+set.seed(144)
+textplot_network(fcmat_avis_select,
+                 min_freq = .7,
+                 vertex_size = s / max(s) * 3)
+
+```
+
+---
+
+## Task 7: Create a FCM Visualization on Your Own
+
+1. Create an own Corpus based on documents of your choice
+2. Create a DFM.
+3. Trim your DFM. 
+4. Create a FCM from your DFM.
+
+
+---
+
+## Text Statistics: Textstat Frequency
+
+```{r, echo=TRUE, eval=FALSE}
+avis_dfm %>%
+  textstat_frequency(n = 15) %>%
+  ggplot(aes(x = reorder(feature, frequency),
+             y = frequency)) +
+  geom_point() +
+  coord_flip() +
+  labs(x = NULL, y = "Frequency") +
+  theme_minimal()
+
+```
+
+---
+
+class: center,middle
+
+
+
+```{r, echo=FALSE, eval=TRUE}
+avis_dfm %>%
+  textstat_frequency(n = 15) %>%
+  ggplot(aes(x = reorder(feature, frequency),
+             y = frequency)) +
+  geom_point() +
+  coord_flip() +
+  labs(x = NULL, y = "Frequency") +
+  theme_minimal()
+
+```
+
+---
+
+## Text Statistics: Lexical Diversity
+
+```{r}
+avis_lexdiv <- textstat_lexdiv(avis_dfm,
+                               measure = c("TTR", "CTTR"))
+tail(avis_lexdiv, 5)
+
+```
+
+
+
+
+
+
