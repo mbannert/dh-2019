@@ -243,9 +243,28 @@ textplot_network(fcmat_avis_select,
 2. Create a DFM.
 3. Trim your DFM. 
 4. Create a FCM from your DFM.
-
+5. Create a plot using textplot_network.
+6. Bonus question: What's the effect of running set.seed() before plotting? Hint: use the documentation of ?set.seed
 
 ---
+
+## Text Statistics: Collocation Analysis
+
+```{r}
+load("../../data/work_m.RData")
+work_tok <- work_m %>% tokens()
+tstat_col2 <- tokens_select(work_tok,
+                            pattern = "^[A-Z]",
+                            valuetype = 'regex',
+                            selection = "keep",
+                            case_insensitive = TRUE,
+                            padding = TRUE) %>%
+  textstat_collocations(min_count = 30, size = 3)
+head(tstat_col2, 5)
+```
+
+---
+
 
 ## Text Statistics: Textstat Frequency
 
@@ -286,12 +305,96 @@ avis_dfm %>%
 ```{r}
 avis_lexdiv <- textstat_lexdiv(avis_dfm,
                                measure = c("TTR", "CTTR"))
-tail(avis_lexdiv, 5)
+head(avis_lexdiv, 5)
+
+```
+
+---
+
+## Text Statistics: Similarity
+
+```{r}
+load("../../data/agg_corpus.RData")
+q_tstat_dist <- textstat_dist(m_g_dfm)
+tstat_dist <- as.dist(q_tstat_dist)
+head(q_tstat_dist)
+```
+
+---
+
+## Text Statistics: Similarity
+
+```{r}
+clust <- hclust(tstat_dist)
+plot(clust, xlab = "Distance", ylab = NULL)
+```
+
+---
+
+## Text Statistics: Keyness
+
+
+```{r,eval=FALSE, echo=TRUE}
+tstat_key <- 
+  textstat_keyness(m_g_dfm,
+                   target = 
+                     docvars(m_g_dfm) == "search")
+textplot_keyness(tstat_key)
+
+```
+
+---
+
+## Text Statistics: Keyness
+
+
+```{r,eval=TRUE, echo=FALSE}
+tstat_key <- 
+  textstat_keyness(m_g_dfm,
+                   target = 
+                     docvars(m_g_dfm) == "search")
+textplot_keyness(tstat_key)
 
 ```
 
 
 
 
+---
 
 
+## Task 8: Apply Text Statistics Functions
+
+1. Pick an own corpus 
+2. Create a DFM and run apply {quanteda}'s texstat_* functions to it. 
+3. Do all statistics work equally well for your data?
+
+
+---
+
+class: center,middle
+
+## Why Go Beyond Text Statistics?
+
+---
+
+## A Glimpse of Machine Learning: Classification
+
+- **Unsupervised Learning**: Run a classification algorithm. Do not know in advance how many clusters we have. Let the computer do the classification and try to interpret afterwards what the clusters represent and why they have been grouped. Example: Latent Dirichlet Allocation (LDA)
+
+- **Supervised Learning**: Predict outcome of a variable.
+Split Dataset into Training and Test Dataset. Outcome is known for the training data. Run model and evaluate how many false positive and false negative vs. correct assesments we have. Example Naive Bayes Classifier
+
+---
+
+## False Positive / False Negative
+
+![pregnant](pregnant.jpg)
+
+[source: chemical statistician](https://chemicalstatistician.wordpress.com/2014/05/12/applied-statistics-lesson-of-the-day-type-i-error-false-positive-and-type-2-error-false-negative/)
+
+
+---
+
+class: center, middle
+## Models vs. Filters?

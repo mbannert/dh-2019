@@ -3,7 +3,7 @@ title: "Hacking for Historians"
 subtitle: "Session 3 - Turning Text into Data"
 author: "Matthias Bannert** (@whatsgoodio) and Ina Serif++"
 institute: "ETH Zurich**, Uni Basel++"
-date: "2019-09-25"
+date: "2019-10-23"
 output:
   xaringan::moon_reader:
     css: ["robot-fonts","more.css"]
@@ -19,6 +19,13 @@ output:
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 ```
+class: center, middle
+
+## 'Professor, how many words does you know?'
+
+<a href="https://www.youtube.com/embed/fOIM1_xOSro"><img src="alig.png" width="600px"></a>
+
+---
 
 
 ## Interactive vs. Batch
@@ -95,9 +102,8 @@ summary(corpus_slides)
 
 ## Keywords-in-context (kwic) 
 
-```{r, eval=FALSE}
+```{r}
 kwic(corpus_slides, pattern = "programming")
-kwic(corpus_slides, "history", valuetype = "regex")
 
 ```
 
@@ -246,7 +252,10 @@ textplot_wordcloud(dfm(tok_avis_clean))
 
 1. Reproduce the Clean Cloud example for 
 a corpus subset of your choice, e.g., 'zu verkaufen' or the real estate example
-2. Discuss this way of reading through a large bunch of documents!
+2. Discuss this way of reading through a large bunch of documents.
+3. What's the use of stopwords? Discuss possible applications? 
+
+---
 
 <!--
 Next up term and ngram frequency concepts
@@ -256,6 +265,54 @@ feature matrix, discuss: document feature matrix
 -> other corpus? 
 
 -->
+
+## Beyond single word tokens: ngrams
+
+```{r}
+
+txt <- "This is cooler than a polar bear's toe nails."
+
+tok_txt <- tokens(txt, remove_punct = TRUE, 
+                  remove_numbers = TRUE)
+tokens_ngrams(tok_txt, 2)
+
+
+```
+
+---
+
+## Beyond single word tokens: skip-grams
+
+
+```{r}
+tokens_ngrams(tok_txt, 2, 2)
+tokens_ngrams(tok_txt, 2, 0:4)
+
+```
+
+---
+
+## Term Frequency beyond Wordclouds: tf and tf-idf
+
+- tf: term frequency 
+- tf-idf [Wikipedia](https://en.wikipedia.org/wiki/Tf%E2%80%93idf): term frequency inverse document frequency (often used for weighting)
+
+---
+
+## Beyond Word Clouds: Word Collocations
+
+```{r}
+avis_corpus %>% 
+  tokens() %>% 
+  tokens_remove(bsl_stop) %>% 
+  textstat_collocations(method = "lambda", size = 2) %>% 
+  arrange(-lambda) %>%  
+  top_n(15)
+
+```
+
+
+
 
 
 
