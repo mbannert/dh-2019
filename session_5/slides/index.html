@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Hacking for Historians</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Matthias Bannert** (@whatsgoodio) and Ina Serif++" />
+    <meta name="date" content="2019-11-20" />
+    <link href="libs/remark-css/robot-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/dygraphs/dygraph.css" rel="stylesheet" />
+    <script src="libs/dygraphs/dygraph-combined.js"></script>
+    <script src="libs/dygraphs/shapes.js"></script>
+    <script src="libs/moment/moment.js"></script>
+    <script src="libs/moment-timezone/moment-timezone-with-data.js"></script>
+    <script src="libs/moment-fquarter/moment-fquarter.min.js"></script>
+    <script src="libs/dygraphs-binding/dygraphs.js"></script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Hacking for Historians
+## Session 5 - Data Visualization
+### Matthias Bannert** (<span class="citation">@whatsgoodio</span>) and Ina Serif++
+### ETH Zurich**, Uni Basel++
+### 2019-11-20
+
+---
+
+
+
+
+
+## Teaching to See 
+
+&lt;a href="http://teachingtosee.org/film/TeachingToSee.html"&gt;&lt;img src="inge_druckrey.png" width="800px"&gt;&lt;/a&gt;
+
+---
+
+class: center, middle
+
+&gt; "[...] Not so see an object. But to see it as something round or squared, something textured or smooth. And to translate what they see into a form language."
+&gt;
+&gt; &lt;footer&gt;--- Inge Druckrey&lt;/footer&gt;
+
+
+---
+
+class: center, middle
+
+&gt; "D3 allows you to bind arbitrary data to a Document Object Model (DOM), and then apply data-driven transformations to the document. For example, you can use D3 to generate an HTML table from an array of numbers. Or, use the same data to create an interactive SVG bar chart with smooth transitions and interaction.
+
+&gt; D3 is not a monolithic framework that seeks to provide every conceivable feature. Instead, D3 solves the crux of the problem: efficient manipulation of documents based on data"
+&gt;
+&gt; &lt;footer&gt;--- Mike Bostock, Introduction to D3&lt;/footer&gt;
+
+---
+
+class: center, middle
+
+## When Do We Use Visualization as Researchers?
+
+---
+
+class: center, middle
+
+![dino_no_stats](dino_no_stats.gif)
+
+
+---
+
+
+class: center, middle
+
+![dino_no_stats](dino.gif)
+
+---
+
+class: center, middle
+
+&lt;a href="https://twitter.com/BrentToderian/status/1194524987865960448?s=20"&gt;&lt;img src="lanes.png" width="600px"&gt;&lt;/a&gt;
+
+---
+
+## Implementation in R 
+
+1. Base R (plot)
+2. Layered [Grammar of Graphics]() (ggplot2)
+3. Javascript / SVG libraries (leaflet, plotly, D3,...)
+
+---
+
+## Base R
+
+
+```r
+plot(AirPassengers)
+```
+
+![](index_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+```r
+class(AirPassengers)
+```
+
+```
+## [1] "ts"
+```
+
+
+---
+
+## ggplot2 
+
+
+```r
+library(tsbox)
+library(dplyr)
+library(ggplot2)
+
+ts_data.frame(AirPassengers) %&gt;% 
+    ggplot(aes(x = time,
+               y = value)) +
+    geom_line() +
+    theme_bw()
+```
+
+![](index_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+
+## dygraphs (web based)
+
+
+```r
+library(dygraphs)
+dygraph(AirPassengers)
+```
+
+<div id="htmlwidget-b0837aab71abac4a1b29" style="width:576px;height:288px;" class="dygraphs html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b0837aab71abac4a1b29">{"x":{"attrs":{"labels":["month","V1"],"legend":"auto","retainDateWindow":false,"axes":{"x":{"pixelsPerLabel":60}}},"scale":"monthly","annotations":[],"shadings":[],"events":[],"format":"date","data":[["1949-01-01T00:00:00.000Z","1949-02-01T00:00:00.000Z","1949-03-01T00:00:00.000Z","1949-04-01T00:00:00.000Z","1949-05-01T00:00:00.000Z","1949-06-01T00:00:00.000Z","1949-07-01T00:00:00.000Z","1949-08-01T00:00:00.000Z","1949-09-01T00:00:00.000Z","1949-10-01T00:00:00.000Z","1949-11-01T00:00:00.000Z","1949-12-01T00:00:00.000Z","1950-01-01T00:00:00.000Z","1950-02-01T00:00:00.000Z","1950-03-01T00:00:00.000Z","1950-04-01T00:00:00.000Z","1950-05-01T00:00:00.000Z","1950-06-01T00:00:00.000Z","1950-07-01T00:00:00.000Z","1950-08-01T00:00:00.000Z","1950-09-01T00:00:00.000Z","1950-10-01T00:00:00.000Z","1950-11-01T00:00:00.000Z","1950-12-01T00:00:00.000Z","1951-01-01T00:00:00.000Z","1951-02-01T00:00:00.000Z","1951-03-01T00:00:00.000Z","1951-04-01T00:00:00.000Z","1951-05-01T00:00:00.000Z","1951-06-01T00:00:00.000Z","1951-07-01T00:00:00.000Z","1951-08-01T00:00:00.000Z","1951-09-01T00:00:00.000Z","1951-10-01T00:00:00.000Z","1951-11-01T00:00:00.000Z","1951-12-01T00:00:00.000Z","1952-01-01T00:00:00.000Z","1952-02-01T00:00:00.000Z","1952-03-01T00:00:00.000Z","1952-04-01T00:00:00.000Z","1952-05-01T00:00:00.000Z","1952-06-01T00:00:00.000Z","1952-07-01T00:00:00.000Z","1952-08-01T00:00:00.000Z","1952-09-01T00:00:00.000Z","1952-10-01T00:00:00.000Z","1952-11-01T00:00:00.000Z","1952-12-01T00:00:00.000Z","1953-01-01T00:00:00.000Z","1953-02-01T00:00:00.000Z","1953-03-01T00:00:00.000Z","1953-04-01T00:00:00.000Z","1953-05-01T00:00:00.000Z","1953-06-01T00:00:00.000Z","1953-07-01T00:00:00.000Z","1953-08-01T00:00:00.000Z","1953-09-01T00:00:00.000Z","1953-10-01T00:00:00.000Z","1953-11-01T00:00:00.000Z","1953-12-01T00:00:00.000Z","1954-01-01T00:00:00.000Z","1954-02-01T00:00:00.000Z","1954-03-01T00:00:00.000Z","1954-04-01T00:00:00.000Z","1954-05-01T00:00:00.000Z","1954-06-01T00:00:00.000Z","1954-07-01T00:00:00.000Z","1954-08-01T00:00:00.000Z","1954-09-01T00:00:00.000Z","1954-10-01T00:00:00.000Z","1954-11-01T00:00:00.000Z","1954-12-01T00:00:00.000Z","1955-01-01T00:00:00.000Z","1955-02-01T00:00:00.000Z","1955-03-01T00:00:00.000Z","1955-04-01T00:00:00.000Z","1955-05-01T00:00:00.000Z","1955-06-01T00:00:00.000Z","1955-07-01T00:00:00.000Z","1955-08-01T00:00:00.000Z","1955-09-01T00:00:00.000Z","1955-10-01T00:00:00.000Z","1955-11-01T00:00:00.000Z","1955-12-01T00:00:00.000Z","1956-01-01T00:00:00.000Z","1956-02-01T00:00:00.000Z","1956-03-01T00:00:00.000Z","1956-04-01T00:00:00.000Z","1956-05-01T00:00:00.000Z","1956-06-01T00:00:00.000Z","1956-07-01T00:00:00.000Z","1956-08-01T00:00:00.000Z","1956-09-01T00:00:00.000Z","1956-10-01T00:00:00.000Z","1956-11-01T00:00:00.000Z","1956-12-01T00:00:00.000Z","1957-01-01T00:00:00.000Z","1957-02-01T00:00:00.000Z","1957-03-01T00:00:00.000Z","1957-04-01T00:00:00.000Z","1957-05-01T00:00:00.000Z","1957-06-01T00:00:00.000Z","1957-07-01T00:00:00.000Z","1957-08-01T00:00:00.000Z","1957-09-01T00:00:00.000Z","1957-10-01T00:00:00.000Z","1957-11-01T00:00:00.000Z","1957-12-01T00:00:00.000Z","1958-01-01T00:00:00.000Z","1958-02-01T00:00:00.000Z","1958-03-01T00:00:00.000Z","1958-04-01T00:00:00.000Z","1958-05-01T00:00:00.000Z","1958-06-01T00:00:00.000Z","1958-07-01T00:00:00.000Z","1958-08-01T00:00:00.000Z","1958-09-01T00:00:00.000Z","1958-10-01T00:00:00.000Z","1958-11-01T00:00:00.000Z","1958-12-01T00:00:00.000Z","1959-01-01T00:00:00.000Z","1959-02-01T00:00:00.000Z","1959-03-01T00:00:00.000Z","1959-04-01T00:00:00.000Z","1959-05-01T00:00:00.000Z","1959-06-01T00:00:00.000Z","1959-07-01T00:00:00.000Z","1959-08-01T00:00:00.000Z","1959-09-01T00:00:00.000Z","1959-10-01T00:00:00.000Z","1959-11-01T00:00:00.000Z","1959-12-01T00:00:00.000Z","1960-01-01T00:00:00.000Z","1960-02-01T00:00:00.000Z","1960-03-01T00:00:00.000Z","1960-04-01T00:00:00.000Z","1960-05-01T00:00:00.000Z","1960-06-01T00:00:00.000Z","1960-07-01T00:00:00.000Z","1960-08-01T00:00:00.000Z","1960-09-01T00:00:00.000Z","1960-10-01T00:00:00.000Z","1960-11-01T00:00:00.000Z","1960-12-01T00:00:00.000Z"],[112,118,132,129,121,135,148,148,136,119,104,118,115,126,141,135,125,149,170,170,158,133,114,140,145,150,178,163,172,178,199,199,184,162,146,166,171,180,193,181,183,218,230,242,209,191,172,194,196,196,236,235,229,243,264,272,237,211,180,201,204,188,235,227,234,264,302,293,259,229,203,229,242,233,267,269,270,315,364,347,312,274,237,278,284,277,317,313,318,374,413,405,355,306,271,306,315,301,356,348,355,422,465,467,404,347,305,336,340,318,362,348,363,435,491,505,404,359,310,337,360,342,406,396,420,472,548,559,463,407,362,405,417,391,419,461,472,535,622,606,508,461,390,432]]},"evals":[],"jsHooks":[]}</script>
+
+
+
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
