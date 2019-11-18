@@ -61,5 +61,8 @@ Don't forget to tell us about what you are interested in, e.g., specific data so
 - http://scottbot.net/argument-clinic/
 - https://rstudio.com/resources/cheatsheets/
 - [{quanteda} cheatsheet](https://muellerstefan.net/files/quanteda-cheatsheet.pdf)
+- [{ggplot2} function reference](https://ggplot2.tidyverse.org/reference/)
+- [{ggplot2} cheatsheet](https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf)
+- [Blog Towards Data Science: A Comprehensive Guide to the Grammar of Graphics for Effective Visualization of Multi-dimensional Data](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149)
 
 
