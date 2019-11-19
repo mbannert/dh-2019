@@ -116,3 +116,143 @@ dygraph(AirPassengers)
 ```
 
 ---
+
+class: center,middle
+
+## Layered Grammar of Graphics vs baseR - a comparison
+
+---
+
+## base R 
+
+.pull-left[
+
+```{r,eval=FALSE}
+library(datasauRus)
+head(datasaurus_dozen_wide)
+plot(datasaurus_dozen_wide$dino_x,
+     datasaurus_dozen_wide$dino_y)
+```
+]
+
+.pull-right[
+
+```{r, echo=FALSE, fig.height=4}
+library(datasauRus)
+head(datasaurus_dozen_wide[,c("dino_x","dino_y","away_x","away_y","star_x","star_y")])
+plot(datasaurus_dozen_wide$dino_x,
+     datasaurus_dozen_wide$dino_y)
+
+```
+
+]
+
+---
+
+## Layered Grammar of Graphics
+
+.pull-left[
+
+```{r,eval=FALSE}
+library(datasauRus)
+
+datasaurus_dozen %>% #<<
+    filter(dataset %in% c("dino", #<<
+                          "star", #<<
+                          "away")) %>% #<<
+    ggplot(
+       aes(x = x,
+           y = y,
+           color = dataset)) +
+    geom_point() +
+    theme_void() +
+    theme(legend.position = "none") +
+    scale_colour_viridis_d()
+```
+]
+
+.pull-right[
+
+```{r, echo=FALSE, fig.height=4}
+
+datasaurus_dozen %>% 
+    filter(dataset %in% c("dino",
+                          "star",
+                          "away"))
+
+```
+
+]
+
+---
+
+## Layered Grammar of Graphics
+
+.pull-left[
+
+```{r,eval=FALSE}
+library(datasauRus)
+
+datasaurus_dozen %>% 
+    filter(dataset %in% c("dino", 
+                          "star", 
+                          "away")) %>% 
+    ggplot( #<<
+       aes(x = x, #<<
+           y = y, #<<
+           color = dataset)) + #<<
+    geom_point() + #<<
+    theme_void() + #<<
+    theme(legend.position = "none") + #<<
+    scale_colour_viridis_d() #<<
+```
+]
+
+.pull-right[
+
+```{r, echo=FALSE, fig.height=4}
+
+datasaurus_dozen %>% 
+    filter(dataset %in% c("dino",
+                          "star",
+                          "away")) %>% ggplot( 
+       aes(x = x, 
+           y = y, 
+           color = dataset)) + 
+    geom_point() + 
+    theme_void() + 
+    theme(legend.position = "none") + 
+    scale_colour_viridis_d() 
+
+```
+
+]
+
+---
+
+## Layered Grammar of Graphics
+
+<img src="layers.png" width="800px">
+
+source: [Towards Data Science Blog](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149)
+
+---
+
+## Task 9 Reproduce the datasauRus!
+
+1. install the {datasauRus} package from CRAN
+2. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
