@@ -241,7 +241,66 @@ source: [Towards Data Science Blog](https://towardsdatascience.com/a-comprehensi
 ## Task 9 Reproduce the datasauRus!
 
 1. install the {datasauRus} package from CRAN
-2. 
+2. explore the two datasets *datasaurus_dozen* and *datasaurus_dozen_wide* using the common functions such as *head*, *tail*, *str*. Which dataset is suitable for use with {ggplot2} ?
+
+3. Create a points plot (using *geom_point*), but limit the dataset to just the dino, the star and the bullseye.
+
+4. Add a new facet layer 
+
+```{r,eval=FALSE}
+facet_wrap(~dataset, ncol = 3)`
+```
+
+How does the plot change ?
+
+---
+
+
+## High Level Plots: Leaflet
+
+.pull-left[
+```{r}
+loc <- data.table::fread("../data/orte.csv")
+head(loc)
+```
+
+```{r, echo=TRUE,eval=FALSE}
+library(leaflet)
+m <- leaflet(data = loc) %>% 
+    addTiles() %>% 
+    addMarkers(~lng,~lat)
+m
+
+```
+
+For more information visit [R for Leaflet](https://rstudio.github.io/leaflet/).
+
+
+
+
+]
+
+.pull-right[
+```{r, echo=FALSE}
+library(leaflet)
+m <- leaflet(data = loc) %>% 
+    addTiles() %>% 
+    addMarkers(~lng,~lat)
+m
+```
+
+]
+
+
+
+
+
+
+
+
+
+
+
 
 
 
