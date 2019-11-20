@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Hacking for Historians</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Matthias Bannert** (@whatsgoodio) and Ina Serif++" />
+    <link href="libs/remark-css/robot-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="more.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Hacking for Historians
+## Session 4 - Turning Text into Data Pt. II
+### Matthias Bannert** (<span class="citation">@whatsgoodio</span>) and Ina Serif++
+### ETH Zurich**, Uni Basel++
+### 2019-11-6
+
+---
+
+
+
+
+## Turning Text Into Data Pt. I
+
+- interactive computer assisted reading
+- scanning through documents
+- grasping content across documents
+
+
+```r
+real_restate &lt;- kwic(avis_corpus,
+     pattern = "losament|^Zimmer|Kammer|Wohnung",
+     valuetype = "regex")
+
+head(real_restate, 3)
+```
+
+```
+##                                               
+##   [0c86562e-3f0b-54f5-97a5-4187d147925d/a0, 4]
+##   [0c86562e-3f0b-54f5-97a5-4187d147925d/a0, 8]
+##  [0c86562e-3f0b-54f5-97a5-4187d147925d/a0, 20]
+##                                                     
+##                              27. Zwey | Losamenter |
+##       Zwey Losamenter von 2 heizbaren |  Zimmern   |
+##  ablaufenden Wassersteinen, und einer |   Kammer   |
+##                          
+##  von 2 heizbaren Zimmern,
+##  , Nebenstube, 2 Küchen  
+##  , alles auf einem Boden
+```
+
+---
+
+class: center,middle
+
+## Today: Text Statistics and Modelling
+
+---
+
+## Revisit {quanteda}'s Document Feature Matrix (DFM)
+
+**Document Feature Matrix**
+
+   - Represents frequencies of features in documents in a matrix
+   - The most efficient structure, but it does not have information on positions of words
+   - Non-positional (bag-of-words) analysis are profrmed using many of the textstat_* and textmodel_* functions
+
+---
+
+
+## Breaking Down Document Feature Matrices
+
+
+```r
+avis_dfm
+```
+
+```
+## Document-feature matrix of: 1,000 documents, 6,021 features (99.7% sparse).
+```
+
+
+---
+
+## Breaking Down Document Feature Matrices
+
+
+```r
+avis_dfm
+```
+
+```
+## Document-feature matrix of: 1,000 documents, 6,021 features (99.7% sparse).
+```
+
+
+```r
+avis_dfm[1:2, 1:5]
+```
+
+```
+## Document-feature matrix of: 2 documents, 5 features (50.0% sparse).
+## 2 x 5 sparse Matrix of class "dfm"
+##                                          features
+## docs                                      zwey losamenter heizbaren
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a0    1          1         1
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a1    0          0         0
+##                                          features
+## docs                                      zimmern nebenstube
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a0       1          1
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a1       0          0
+```
+
+---
+
+## Breaking Down Document Feature Matrices
+
+
+```r
+avis_dfm
+```
+
+```
+## Document-feature matrix of: 1,000 documents, 6,021 features (99.7% sparse).
+```
+
+
+```r
+avis_dfm[1:2, 1:5]
+```
+
+```
+## Document-feature matrix of: 2 documents, 5 features (50.0% sparse).
+## 2 x 5 sparse Matrix of class "dfm"
+##                                          features
+## docs                                      zwey losamenter heizbaren
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a0    1          1         1
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a1    0          0         0
+##                                          features
+## docs                                      zimmern nebenstube
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a0       1          1
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a1       0          0
+```
+
+
+```r
+head(colSums(avis_dfm), 5)
+```
+
+```
+##       zwey losamenter  heizbaren    zimmern nebenstube 
+##         56         11         14         30         17
+```
+
+---
+
+## Breaking Down Document Feature Matrices
+
+
+```r
+avis_dfm
+```
+
+```
+## Document-feature matrix of: 1,000 documents, 6,021 features (99.7% sparse).
+```
+
+
+```r
+avis_dfm[1:2, 1:5]
+```
+
+```
+## Document-feature matrix of: 2 documents, 5 features (50.0% sparse).
+## 2 x 5 sparse Matrix of class "dfm"
+##                                          features
+## docs                                      zwey losamenter heizbaren
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a0    1          1         1
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a1    0          0         0
+##                                          features
+## docs                                      zimmern nebenstube
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a0       1          1
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a1       0          0
+```
+
+
+```r
+head(colSums(avis_dfm), 5)
+```
+
+```
+##       zwey losamenter  heizbaren    zimmern nebenstube 
+##         56         11         14         30         17
+```
+
+
+```r
+head(rowSums(avis_dfm), 2)
+```
+
+```
+## 0c86562e-3f0b-54f5-97a5-4187d147925d/a0 
+##                                      28 
+## 0c86562e-3f0b-54f5-97a5-4187d147925d/a1 
+##                                      13
+```
+
+---
+
+## Task 6: Reproduce a DFM
+
+1. Read in the avis data
+2. Turn the data into a {quanteda} corpus
+3. Create a DFM from the avis corpus
+4. Run basic diagnostics on the DFM !
+5. What are the dimensions of your DFM? 
+6. Discuss:
+    - potential applications of a DFM
+    - challenges when processing a DFM
+
+---
+
+## Text Statistics /w {quanteda}
+
+- textstat_collocations	Identify and score multi-word expressions
+- textstat_dist	Similarity and distance computation between documents or features
+- textstat_entropy	Compute entropy of documents or features
+- textstat_frequency	Tabulate feature frequencies
+- textstat_keyness	Calculate keyness statistics
+- textstat_lexdiv	Calculate lexical diversity
+- textstat_readability	Calculate readability
+- textstat_simil Similarity and distance computation between documents or features
+
+---
+
+## DFM Basics: Exploiting Scarcity
+
+
+```r
+slim_dfm &lt;- dfm_trim(avis_dfm,
+                     min_termfreq = 10)
+topfeatures(slim_dfm)
+```
+
+```
+##                 btz            losament               nebst 
+##                 246                 142                 104 
+##               küche               basel             wünscht 
+##                  99                  95                  93 
+##               platz                 zum              kammer 
+##                  84                  82                  80 
+## fastnachtfronfasten 
+##                  77
+```
+
+
+```r
+nfeat(slim_dfm)
+```
+
+```
+## [1] 420
+```
+
+
+```r
+nfeat(avis_dfm)
+```
+
+```
+## [1] 6021
+```
+
+---
+
+## Text Statistics: Feature Co-Occurence Matrix (FCM)
+
+
+```r
+fcm_avis &lt;- fcm(slim_dfm)
+feat &lt;- names(topfeatures(fcm_avis, 50))
+fcmat_avis_select &lt;- fcm_select(fcm_avis,
+                                pattern = feat)
+dim(fcmat_avis_select)
+```
+
+```
+## [1] 50 50
+```
+
+
+```r
+fcm_avis["kammer","küche"]
+```
+
+```
+## Feature co-occurrence matrix of: 1 by 1 feature.
+## 1 x 1 sparse Matrix of class "fcm"
+##         features
+## features küche
+##   kammer    65
+```
+
+
+```r
+head(fcm_avis,3)
+```
+
+```
+## Feature co-occurrence matrix of: 3 by 6 features.
+## 3 x 6 sparse Matrix of class "fcm"
+##             features
+## features     zwey losamenter heizbaren zimmern nebenstube kammer
+##   zwey          2          9         1       3          7      9
+##   losamenter    0          0         1       3          1      7
+##   heizbaren     0          0         0      14          1      4
+```
+
+---
+
+## Text Statistics: Visualization of a FCM
+
+
+```r
+s &lt;- log(colSums(dfm_select(avis_dfm, feat)))
+set.seed(144)
+textplot_network(fcmat_avis_select,
+                 min_freq = .7,
+                 vertex_size = s / max(s) * 3)
+```
+
+---
+
+class: center,middle
+
+![](index_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+
+---
+
+## Task 7: Create a FCM Visualization on Your Own
+
+1. Create an own Corpus based on documents of your choice
+2. Create a DFM.
+3. Trim your DFM. 
+4. Create a FCM from your DFM.
+5. Create a plot using textplot_network.
+6. Bonus question: What's the effect of running set.seed() before plotting? Hint: use the documentation of ?set.seed
+
+---
+
+## Text Statistics: Collocation Analysis
+
+
+```r
+load("../../data/work_m.RData")
+work_tok &lt;- work_m %&gt;% tokens()
+tstat_col2 &lt;- tokens_select(work_tok,
+                            pattern = "^[A-Z]",
+                            valuetype = 'regex',
+                            selection = "keep",
+                            case_insensitive = TRUE,
+                            padding = TRUE) %&gt;%
+  textstat_collocations(min_count = 30, size = 3)
+head(tstat_col2, 5)
+```
+
+```
+##           collocation count count_nested length     lambda          z
+## 1 und könnte sogleich    32            0      3  3.5599435  2.3212170
+## 2     einen platz als   108            0      3  1.6081446  0.9846155
+## 3   platz zu erhalten    30            0      3  1.4649488  0.9824920
+## 4  eine anstellung zu    30            0      3  0.7371248  0.9799741
+## 5   ein junger mensch    32            0      3 -1.5376165 -1.0091451
+```
+
+---
+
+
+## Text Statistics: Textstat Frequency
+
+
+```r
+avis_dfm %&gt;%
+  textstat_frequency(n = 15) %&gt;%
+  ggplot(aes(x = reorder(feature, frequency),
+             y = frequency)) +
+  geom_point() +
+  coord_flip() +
+  labs(x = NULL, y = "Frequency") +
+  theme_minimal()
+```
+
+---
+
+class: center,middle
+
+
+
+![](index_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+
+---
+
+## Text Statistics: Lexical Diversity
+
+
+```r
+avis_lexdiv &lt;- textstat_lexdiv(avis_dfm,
+                               measure = c("TTR", "CTTR"))
+head(avis_lexdiv, 5)
+```
+
+```
+##                                   document       TTR     CTTR
+## 1  0c86562e-3f0b-54f5-97a5-4187d147925d/a0 0.9642857 3.608027
+## 2  0c86562e-3f0b-54f5-97a5-4187d147925d/a1 1.0000000 2.549510
+## 3 0c86562e-3f0b-54f5-97a5-4187d147925d/a10 1.0000000 2.915476
+## 4 0c86562e-3f0b-54f5-97a5-4187d147925d/a11 1.0000000 1.732051
+## 5 0c86562e-3f0b-54f5-97a5-4187d147925d/a12 1.0000000 1.224745
+```
+
+---
+
+## Text Statistics: Similarity
+
+
+```r
+load("../../data/agg_corpus.RData")
+q_tstat_dist &lt;- textstat_dist(m_g_dfm)
+tstat_dist &lt;- as.dist(q_tstat_dist)
+head(q_tstat_dist)
+```
+
+```
+##              ra   search     work
+## ra        0.000 2875.128 2821.292
+## search 2875.128    0.000  922.942
+## work   2821.292  922.942    0.000
+```
+
+---
+
+## Text Statistics: Similarity
+
+
+```r
+clust &lt;- hclust(tstat_dist)
+plot(clust, xlab = "Distance", ylab = NULL)
+```
+
+![](index_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+
+---
+
+## Text Statistics: Keyness
+
+
+
+```r
+tstat_key &lt;- 
+  textstat_keyness(m_g_dfm,
+                   target = 
+                     docvars(m_g_dfm) == "search")
+textplot_keyness(tstat_key)
+```
+
+---
+
+## Text Statistics: Keyness
+
+
+![](index_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
+
+
+
+
+---
+
+
+## Task 8: Apply Text Statistics Functions
+
+1. Pick an own corpus 
+2. Create a DFM and run apply {quanteda}'s texstat_* functions to it. 
+3. Do all statistics work equally well for your data?
+
+
+---
+
+class: center,middle
+
+## Why Go Beyond Text Statistics?
+
+---
+
+## A Glimpse of Machine Learning: Classification
+
+- **Unsupervised Learning**: Run a classification algorithm. Do not know in advance how many clusters we have. Let the computer do the classification and try to interpret afterwards what the clusters represent and why they have been grouped. Example: Latent Dirichlet Allocation (LDA)
+
+- **Supervised Learning**: Predict outcome of a variable.
+Split Dataset into Training and Test Dataset. Outcome is known for the training data. Run model and evaluate how many false positive and false negative vs. correct assesments we have. Example Naive Bayes Classifier
+
+---
+
+## False Positive / False Negative
+
+![pregnant](pregnant.jpg)
+
+[source: chemical statistician](https://chemicalstatistician.wordpress.com/2014/05/12/applied-statistics-lesson-of-the-day-type-i-error-false-positive-and-type-2-error-false-negative/)
+
+
+---
+
+class: center, middle
+## Models vs. Filters?
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Hacking for Historians</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Matthias Bannert** (@whatsgoodio) and Ina Serif++" />
+    <meta name="date" content="2019-10-23" />
+    <link href="libs/remark-css/robot-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="more.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Hacking for Historians
+## Session 3 - Turning Text into Data
+### Matthias Bannert** (<span class="citation">@whatsgoodio</span>) and Ina Serif++
+### ETH Zurich**, Uni Basel++
+### 2019-10-23
+
+---
+
+
+
+
+class: center, middle
+
+## 'Professor, how many words does you know?'
+
+&lt;a href="https://www.youtube.com/embed/fOIM1_xOSro"&gt;&lt;img src="alig.png" width="600px"&gt;&lt;/a&gt;
+
+---
+
+
+## Interactive vs. Batch
+
+![interactive](interactive.png)
+
+---
+
+## Explorative Data Analysis (EDA) / Interactive Techniques
+
+- keyword-in-context (kwic)
+- visualizations
+     - x-ray plots
+     - wordclouds
+     - ... 
+- ngrams 
+- tf-idf
+- ...
+
+
+---
+
+## Data Preparation
+
+- Tokenization
+- Cleaning
+    - stop words
+    - punctuation
+- Encoding
+
+---
+
+## High Level Packages for Quantitative Analysis of Textual Data
+
+- **quanteda** (recommended)
+- *tm*
+- *tidytext*
+- ...
+
+---
+
+## A *quanteda* Based Workflow: Basic Objects
+
+1. Corpus
+   - Saves character strings and variables in a data frame
+   - Combines texts with document-level variables
+2. Tokens
+   - Stores tokens in a list of vectors
+   - More efficient than character strings, but preserves positions of words
+3. Document Feature Matrix
+   - Represents frequencies of features in documents in a matrix
+   - The most efficient structure, but it does not have information on positions of words
+   - Non-positional (bag-of-words) analysis are profrmed using many of the textstat_* and textmodel_* functions
+
+---
+
+## Create a *quanteda* Corpus
+
+
+```r
+library(readtext)
+library(quanteda)
+
+slides &lt;- readtext("../../slides/*.Rmd")
+# Note how document names are given
+# automatically from doc_ids, that's why we tune
+# them a bit here and strip file extensions
+slides$doc_id &lt;- gsub("\\.[A-Za-z]+","",slides$doc_id)
+corpus_slides &lt;- corpus(slides)
+summary(corpus_slides)
+```
+
+```
+## Corpus consisting of 4 documents:
+## 
+##                Text Types Tokens Sentences
+##  breaking_down_code   304   1127        22
+##               index   303    975        16
+##            session2   254    639        16
+##           session2a   233    710         7
+## 
+## Source: /Users/mbannert/repositories/github/dh-2019/slides/session3/* on x86_64 by mbannert
+## Created: Sat Oct 26 10:24:48 2019
+## Notes:
+```
+
+---
+
+## Keywords-in-context (kwic) 
+
+
+```r
+kwic(corpus_slides, pattern = "programming")
+```
+
+```
+##                                                   
+##  [index, 162] Economics- 20+ years | programming |
+##  [index, 205]   historian- 20+ hrs | programming |
+##                          
+##  experience]. pull-right[
+##  experience]** course
+```
+
+---
+
+## Task 3: Create a Corpus from Your Own Data
+
+1. Choose a folder on your computer that contains multiple plain text files, .pdfs or .docx documents.
+2. Read in all files of a specific format, e.g., .pdf or .docx in that folder. 
+3. Create a quanteda corpus, explore and summarize your corpus of documents.
+4. Discuss this technique of 'scanning' documents!
+
+---
+
+## Turning a Historical Source Into a Corpus
+
+
+```r
+library(readtext)
+library(quanteda)
+library(dplyr)
+
+# avisblatt example
+avis &lt;- readtext("../../data/avis_1834.csv",
+                 text_field = "ad_content")
+avis$doc_id &lt;- avis$id
+avis_corpus &lt;- corpus(avis)
+summary(avis_corpus)
+```
+
+```
+## Corpus consisting of 1000 documents, showing 100 documents:
+## 
+##                                      Text Types Tokens Sentences
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a0    42     58         2
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a1    23     29         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a10    31     36         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a11    12     14         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a12     6      7         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a13    20     24         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a14    24     25         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a15    11     13         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a16    38     46         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a17    28     33         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a18    54     69         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a19    37     45         2
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a2    22     24         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a20    31     37         4
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a21    37     47         3
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a22    35     43         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a23    27     32         4
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a24    24     30         4
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a25    13     16         3
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a26    51     65         6
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a27    39     47         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a28    20     25         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a29    26     28         2
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a3    17     18         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a30    19     29         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a31    33     36         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a32    36     41         3
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a33    20     25         4
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a34    19     21         2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a35    50     60         5
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a36    48     68         6
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a37    31     44         2
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a4    11     12         2
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a5    15     19         3
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a6    25     29         3
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a7    12     14         3
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a8    11     13         2
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a9    25     31         2
+##   2d109c30-095c-517f-b324-5b03f7636340/a0    25     26         2
+##   2d109c30-095c-517f-b324-5b03f7636340/a1    67     94         9
+##  2d109c30-095c-517f-b324-5b03f7636340/a10    33     43         2
+##  2d109c30-095c-517f-b324-5b03f7636340/a11    23     31         2
+##  2d109c30-095c-517f-b324-5b03f7636340/a12    46     69         6
+##  2d109c30-095c-517f-b324-5b03f7636340/a13   205    439        66
+##  2d109c30-095c-517f-b324-5b03f7636340/a14    19     21         2
+##  2d109c30-095c-517f-b324-5b03f7636340/a15    10     11         2
+##  2d109c30-095c-517f-b324-5b03f7636340/a16    12     15         2
+##  2d109c30-095c-517f-b324-5b03f7636340/a17    43     62        12
+##  2d109c30-095c-517f-b324-5b03f7636340/a18    28     39         5
+##   2d109c30-095c-517f-b324-5b03f7636340/a2    19     21         2
+##   2d109c30-095c-517f-b324-5b03f7636340/a3    42     56         3
+##   2d109c30-095c-517f-b324-5b03f7636340/a4    72    108         8
+##   2d109c30-095c-517f-b324-5b03f7636340/a5    24     26         2
+##   2d109c30-095c-517f-b324-5b03f7636340/a6   131    214        31
+##   2d109c30-095c-517f-b324-5b03f7636340/a7    21     25         3
+##   2d109c30-095c-517f-b324-5b03f7636340/a8    51     62         3
+##   2d109c30-095c-517f-b324-5b03f7636340/a9    17     19         2
+##   3ae2fe1f-a270-58d8-9717-e6b6da5cf326/a1    31     33         3
+##   3ae2fe1f-a270-58d8-9717-e6b6da5cf326/a2    59     86         6
+##   3ae2fe1f-a270-58d8-9717-e6b6da5cf326/a3    29     38         3
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a0    37     45         2
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a1    29     34         3
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a10    31     35         2
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a11    25     29         3
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a12    67     78         4
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a13    34     39         3
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a14    23     26         2
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a15    54     67         4
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a16    44     54         3
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a17    15     16         2
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a18    23     28         3
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a19    64     77         4
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a2    30     36         3
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a20    33     39         3
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a21    55     66         3
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a22    24     30         3
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a23    12     14         2
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a24    21     23         2
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a25    38     47         3
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a26    33     39         2
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a27    16     18         2
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a28    31     38         2
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a29    70     93         4
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a3    26     30         3
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a4    22     23         2
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a5    32     33         2
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a6    33     36         2
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a7    35     39         2
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a8    25     27         2
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a9    33     37         2
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a1    24     31         3
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a2   169    320        47
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a3    29     36         3
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a4    41     45         3
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a5    11     15         4
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a6    12     14         3
+##   a1eb378a-3760-5b8d-bd96-530a1390fd7c/a0    19     21         2
+##   a1eb378a-3760-5b8d-bd96-530a1390fd7c/a1    28     32         3
+##  a1eb378a-3760-5b8d-bd96-530a1390fd7c/a10    53     75         7
+##  a1eb378a-3760-5b8d-bd96-530a1390fd7c/a11    42     53         3
+##                                        id
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a0
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a1
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a10
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a11
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a12
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a13
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a14
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a15
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a16
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a17
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a18
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a19
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a2
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a20
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a21
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a22
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a23
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a24
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a25
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a26
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a27
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a28
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a29
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a3
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a30
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a31
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a32
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a33
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a34
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a35
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a36
+##  0c86562e-3f0b-54f5-97a5-4187d147925d/a37
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a4
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a5
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a6
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a7
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a8
+##   0c86562e-3f0b-54f5-97a5-4187d147925d/a9
+##   2d109c30-095c-517f-b324-5b03f7636340/a0
+##   2d109c30-095c-517f-b324-5b03f7636340/a1
+##  2d109c30-095c-517f-b324-5b03f7636340/a10
+##  2d109c30-095c-517f-b324-5b03f7636340/a11
+##  2d109c30-095c-517f-b324-5b03f7636340/a12
+##  2d109c30-095c-517f-b324-5b03f7636340/a13
+##  2d109c30-095c-517f-b324-5b03f7636340/a14
+##  2d109c30-095c-517f-b324-5b03f7636340/a15
+##  2d109c30-095c-517f-b324-5b03f7636340/a16
+##  2d109c30-095c-517f-b324-5b03f7636340/a17
+##  2d109c30-095c-517f-b324-5b03f7636340/a18
+##   2d109c30-095c-517f-b324-5b03f7636340/a2
+##   2d109c30-095c-517f-b324-5b03f7636340/a3
+##   2d109c30-095c-517f-b324-5b03f7636340/a4
+##   2d109c30-095c-517f-b324-5b03f7636340/a5
+##   2d109c30-095c-517f-b324-5b03f7636340/a6
+##   2d109c30-095c-517f-b324-5b03f7636340/a7
+##   2d109c30-095c-517f-b324-5b03f7636340/a8
+##   2d109c30-095c-517f-b324-5b03f7636340/a9
+##   3ae2fe1f-a270-58d8-9717-e6b6da5cf326/a1
+##   3ae2fe1f-a270-58d8-9717-e6b6da5cf326/a2
+##   3ae2fe1f-a270-58d8-9717-e6b6da5cf326/a3
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a0
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a1
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a10
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a11
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a12
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a13
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a14
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a15
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a16
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a17
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a18
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a19
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a2
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a20
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a21
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a22
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a23
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a24
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a25
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a26
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a27
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a28
+##  505d29bf-7329-5c8f-a140-9c14242e06cb/a29
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a3
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a4
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a5
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a6
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a7
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a8
+##   505d29bf-7329-5c8f-a140-9c14242e06cb/a9
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a1
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a2
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a3
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a4
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a5
+##   6fde9356-4f30-533b-b9a8-6bdc4c600dbd/a6
+##   a1eb378a-3760-5b8d-bd96-530a1390fd7c/a0
+##   a1eb378a-3760-5b8d-bd96-530a1390fd7c/a1
+##  a1eb378a-3760-5b8d-bd96-530a1390fd7c/a10
+##  a1eb378a-3760-5b8d-bd96-530a1390fd7c/a11
+## 
+## Source: /Users/mbannert/repositories/github/dh-2019/slides/session3/* on x86_64 by mbannert
+## Created: Sat Oct 26 10:24:48 2019
+## Notes:
+```
+
+---
+
+## Extract a Document from a Corpus
+
+
+```r
+texts(avis_corpus)['0c86562e-3f0b-54f5-97a5-4187d147925d/a12']
+```
+
+```
+##         0c86562e-3f0b-54f5-97a5-4187d147925d/a12 
+## "5. Ein noch gutconditionirter Ghar-à-bancSitz."
+```
+
+---
+
+## Yet Another kwic
+
+
+```r
+sale_kwic &lt;- kwic(avis_corpus,
+     pattern = phrase("zu verkaufen"))
+# exclude "Frauenzimmer"
+real_restate &lt;- kwic(avis_corpus,
+     pattern = "losament|^Zimmer|Kammer",
+     valuetype = "regex")
+
+avis_corpus %&gt;%
+  summary() %&gt;%
+  filter(Text %in% real_restate$docname) %&gt;% 
+  head()
+```
+
+```
+##                                       Text Types Tokens Sentences
+## 1  0c86562e-3f0b-54f5-97a5-4187d147925d/a0    42     58         2
+## 2  0c86562e-3f0b-54f5-97a5-4187d147925d/a1    23     29         2
+## 3 0c86562e-3f0b-54f5-97a5-4187d147925d/a10    31     36         2
+## 4 0c86562e-3f0b-54f5-97a5-4187d147925d/a16    38     46         2
+## 5 0c86562e-3f0b-54f5-97a5-4187d147925d/a17    28     33         2
+## 6 0c86562e-3f0b-54f5-97a5-4187d147925d/a18    54     69         2
+##                                         id
+## 1  0c86562e-3f0b-54f5-97a5-4187d147925d/a0
+## 2  0c86562e-3f0b-54f5-97a5-4187d147925d/a1
+## 3 0c86562e-3f0b-54f5-97a5-4187d147925d/a10
+## 4 0c86562e-3f0b-54f5-97a5-4187d147925d/a16
+## 5 0c86562e-3f0b-54f5-97a5-4187d147925d/a17
+## 6 0c86562e-3f0b-54f5-97a5-4187d147925d/a18
+```
+
+---
+
+## Visualization of kwic: X-Ray Plots
+
+
+```r
+textplot_xray(real_restate[1:10,])
+```
+
+![](session3_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+
+## Task 4
+
+1. Reproduce the *Avisblatt* example above. Note: the .csv containing the data is available from the [course github repository](https://raw.githubusercontent.com/mbannert/dh-2019/master/data/avis_1834.csv)
+2. Can you guess what the Avisblatt source is?
+3. Discuss how you could make use of DH ideas to makes sense of the 1000 documents in the source!
+
+---
+
+class: center, middle
+
+## Are Wordclouds Useless? 
+
+---
+
+## Naive *Avisblatt* Wordcloud
+
+
+```r
+avis_ra &lt;- corpus_subset(avis_corpus,
+              id %in% real_restate$docname)
+avis_ra %&gt;% 
+  dfm() %&gt;% 
+  textplot_wordcloud()
+```
+
+![](session3_files/figure-html/avis-cloud1-1.png)&lt;!-- --&gt;
+
+---
+
+## Create Tokens
+
+
+```r
+tok_avis &lt;- tokens(avis_ra)
+tok_avis[1]
+```
+
+```
+## tokens from 1 document.
+## 0c86562e-3f0b-54f5-97a5-4187d147925d/a0 :
+##  [1] "27"                  "."                   "Zwey"               
+##  [4] "Losamenter"          "von"                 "2"                  
+##  [7] "heizbaren"           "Zimmern"             ","                  
+## [10] "Nebenstube"          ","                   "2"                  
+## [13] "Küchen"              "mit"                 "ablaufenden"        
+## [16] "Wassersteinen"       ","                   "und"                
+## [19] "einer"               "Kammer"              ","                  
+## [22] "alles"               "auf"                 "einem"              
+## [25] "Boden"               ";"                   "sodann"             
+## [28] "noch"                "2"                   "Kammern"            
+## [31] "auf"                 "dem"                 "obern"              
+## [34] "Stock"               ","                   "Platz"              
+## [37] "zu"                  "Holz"                ","                  
+## [40] "Brunnen"             "im"                  "Haus"               
+## [43] ","                   "und"                 "Waschhaus"          
+## [46] ","                   "alles"               "sehr"               
+## [49] "bequem"              "eingerichtet"        ";"                  
+## [52] "zertheilt"           "oder"                "zusammen"           
+## [55] ","                   "auf"                 "Fastnachtfronfasten"
+## [58] "."
+```
+
+---
+
+## Cleaning Tokens I
+
+
+```r
+tok_avis_clean &lt;- tokens(avis_ra,
+                         remove_punct = TRUE,
+                         remove_numbers = TRUE)
+tok_avis_clean[2]
+```
+
+```
+## tokens from 1 document.
+## 0c86562e-3f0b-54f5-97a5-4187d147925d/a1 :
+##  [1] "In"              "der"             "AeschenVorstadt"
+##  [4] "Ein"             "schönes"         "helles"         
+##  [7] "Losament"        "im"              "ersten"         
+## [10] "Stock"           "von"             "Stube"          
+## [13] "und"             "Alekoven"        "Küche"          
+## [16] "und"             "ablaufendem"     "Wasserstein"    
+## [19] "und"             "was"             "der"            
+## [22] "Augenird"
+```
+
+---
+
+## Cleaning Tokens II: Custom Stopwords
+
+
+```r
+bsl_stop &lt;- c("in", "der", "die", "das","bis","no",
+              "dem", "den", "im", "und", "e",
+              "oder","auch","um", "zu", "so", "an",
+              "wie", "mit", "von", "ein", "einer",
+              "einen", "eine", "eines","einem",
+              "er", "sie", "als", "ist", "sich",
+              "es","auf", "für" , "am", "man",
+              "sind", "werden", "bey","des","à",
+              "et","a","wird", "haben", "gegen",
+              "habe","dr","pr","le", "de","st",
+              "diese","kann", "fr","dazu", "seyn",
+              "mir","vor","u","da","la")
+tok_avis_clean &lt;- tokens_remove(tok_avis_clean,
+                                bsl_stop)
+tok_avis_clean[2]
+```
+
+```
+## tokens from 1 document.
+## 0c86562e-3f0b-54f5-97a5-4187d147925d/a1 :
+##  [1] "AeschenVorstadt" "schönes"         "helles"         
+##  [4] "Losament"        "ersten"          "Stock"          
+##  [7] "Stube"           "Alekoven"        "Küche"          
+## [10] "ablaufendem"     "Wasserstein"     "was"            
+## [13] "Augenird"
+```
+
+---
+
+## Clean Cloud
+
+
+```r
+textplot_wordcloud(dfm(tok_avis_clean))
+```
+
+![](session3_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+
+## Task 5: Tokens &amp; the Cloud
+
+1. Reproduce the Clean Cloud example for 
+a corpus subset of your choice, e.g., 'zu verkaufen' or the real estate example
+2. Discuss this way of reading through a large bunch of documents.
+3. What's the use of stopwords? Discuss possible applications? 
+
+---
+
+&lt;!--
+Next up term and ngram frequency concepts
+in quanteda this is handled by document 
+feature matrix, discuss: document feature matrix 
+-&gt; maybe show avisblatt example theoretically? 
+-&gt; other corpus? 
+
+--&gt;
+
+## Beyond single word tokens: ngrams
+
+
+```r
+txt &lt;- "This is cooler than a polar bear's toe nails."
+
+tok_txt &lt;- tokens(txt, remove_punct = TRUE, 
+                  remove_numbers = TRUE)
+tokens_ngrams(tok_txt, 2)
+```
+
+```
+## tokens from 1 document.
+## text1 :
+## [1] "This_is"      "is_cooler"    "cooler_than"  "than_a"      
+## [5] "a_polar"      "polar_bear's" "bear's_toe"   "toe_nails"
+```
+
+---
+
+## Beyond single word tokens: skip-grams
+
+
+
+```r
+tokens_ngrams(tok_txt, 2, 2)
+```
+
+```
+## tokens from 1 document.
+## text1 :
+## [1] "This_than"    "is_a"         "cooler_polar" "than_bear's" 
+## [5] "a_toe"        "polar_nails"
+```
+
+```r
+tokens_ngrams(tok_txt, 2, 0:4)
+```
+
+```
+## tokens from 1 document.
+## text1 :
+##  [1] "This_is"       "This_cooler"   "This_than"     "This_a"       
+##  [5] "This_polar"    "is_cooler"     "is_than"       "is_a"         
+##  [9] "is_polar"      "is_bear's"     "cooler_than"   "cooler_a"     
+## [13] "cooler_polar"  "cooler_bear's" "cooler_toe"    "than_a"       
+## [17] "than_polar"    "than_bear's"   "than_toe"      "than_nails"   
+## [21] "a_polar"       "a_bear's"      "a_toe"         "a_nails"      
+## [25] "polar_bear's"  "polar_toe"     "polar_nails"   "bear's_toe"   
+## [29] "bear's_nails"  "toe_nails"
+```
+
+---
+
+## Term Frequency beyond Wordclouds: tf and tf-idf
+
+- tf: term frequency 
+- tf-idf [Wikipedia](https://en.wikipedia.org/wiki/Tf%E2%80%93idf): term frequency inverse document frequency (often used for weighting)
+
+---
+
+## Beyond Word Clouds: Word Collocations
+
+
+```r
+avis_corpus %&gt;% 
+  tokens() %&gt;% 
+  tokens_remove(bsl_stop) %&gt;% 
+  textstat_collocations(method = "lambda", size = 2) %&gt;% 
+  arrange(-lambda) %&gt;%  
+  top_n(15)
+```
+
+```
+## Selecting by z
+```
+
+```
+##                     collocation count count_nested length   lambda
+## 1                billigen preis    35            0      2 7.469525
+## 2                schönes helles    16            0      2 7.244566
+## 3               helles losament    44            0      2 7.228185
+## 4                finder ersucht    19            0      2 7.227022
+## 5                    leute ohne    17            0      2 7.186055
+## 6                   januar 1834    15            0      2 7.015822
+## 7                  stille leute    27            0      2 6.996115
+## 8               könnte sogleich    14            0      2 6.816536
+## 9  fastnachtfronfasten beziehen    20            0      2 6.769555
+## 10 sogleich fastnachtfronfasten    17            0      2 6.115719
+## 11              bestehend stube    17            0      2 5.914318
+## 12        berichthaus abzugeben    15            0      2 5.890850
+## 13                  ohne kinder    17            0      2 5.858730
+## 14                 nebst kammer    20            0      2 5.567719
+## 15               losament stube    23            0      2 4.873251
+##           z
+## 1  19.85499
+## 2  15.54417
+## 3  20.58682
+## 4  16.75609
+## 5  15.47376
+## 6  15.62073
+## 7  18.68729
+## 8  15.35173
+## 9  17.08344
+## 10 15.39428
+## 11 16.23541
+## 12 15.47828
+## 13 15.72196
+## 14 15.46325
+## 15 16.44107
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

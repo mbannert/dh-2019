@@ -256,7 +256,39 @@ behind this syntax (see also [{ggplot}'s facet function reference](https://ggplo
 
 ---
 
-## High Level Plots: Leaflet Example
+## The Importance of a Visual Concept
+
+<img src="nopie.png" width="700px">
+
+---
+
+## The Importance of a Visual Concept
+
+<img src="yellow.png" width="700px">
+
+---
+
+## The Importance of a Visual Concept
+
+- [Remove to Improve by Dark Horse Analytics](https://www.darkhorseanalytics.com/blog/salvaging-the-pie)
+
+
+
+---
+
+## Challenge: Create a Barplot of the Course's Demographics
+
+1. Figure out a way to survey gender and studies.
+
+2. Record the results in a {dplyr} *tibble*
+
+3. Create a bar chart using {ggplot2}'s *geom_bar()*. 
+Make sure to check the [{ggplot2} function reference for geom_bar](https://ggplot2.tidyverse.org/reference/geom_bar.html). Display study counts and test mapping gender to a *facet* or *fill*.
+
+---
+
+
+## Higher Level Plots: Basic Leaflet Example
 
 .pull-left[
 ```{r}
@@ -293,7 +325,7 @@ m
 
 ---
 
-## High Level Plots: Shape files 
+## Understanding Shapes & Choropleths
 
 .pull-left[
 
@@ -326,5 +358,136 @@ leaflet(fso) %>%
 ```
 
 ]
+
+
+---
+
+## Understanding Shapes & Choropleths
+
+
+.pull-left[
+
+```{r,eval=FALSE}
+library(dplyr)
+fso_pop <- tibble(GRNR = 1:7,
+       POP = c(1593839,1842251,1128723,
+               1466424,1153485,790458,351946))
+fso_pop
+
+
+```
+
+]
+
+source: [FSO Regions](https://www.bfs.admin.ch/bfs/de/home/statistiken/querschnittsthemen/raeumliche-analysen/raeumliche-gliederungen/analyseregionen.html)
+
+]
+
+.pull-right[
+```{r,}
+library(geojsonio)
+library(dplyr)
+fso <- geojson_read("../data/ch_fso_simple.geojson",
+                    what = "sp")
+
+# also use str() and class to explore the fso object!
+head(fso@data)
+
+
+```
+
+]
+
+
+---
+    
+## Understanding Shapes & Choropleths    
+
+.pull-left[
+
+```{r,eval=FALSE}
+library(geojsonio)
+library(dplyr)
+library(leaflet)
+fso <- geojson_read("../data/ch_fso_simple.geojson",
+                    what = "sp")
+fso_pop <- tibble(GRNR = 1:7,
+       POP = c(1593839,1842251,1128723,
+               1466424,1153485,790458,351946))
+
+fso@data <- merge(fso@data,fso_pop)
+pal <- colorNumeric("viridis", NULL)
+leaflet(fso) %>%
+    addTiles() %>%
+    addPolygons(stroke = FALSE,
+                smoothFactor = 0.3, fillOpacity = .6,
+                fillColor = ~pal(log10(POP)),
+    ) %>% 
+    addLegend(pal = pal,
+              title = "Population",
+              values = ~log10(POP), opacity = 1.0,
+              labFormat = labelFormat(transform = function(x) round(10^x)))
+
+
+```
+
+]
+
+]
+
+.pull-right[
+```{r, echo=FALSE, message=FALSE}
+library(geojsonio)
+library(dplyr)
+library(leaflet)
+fso <- geojson_read("../data/ch_fso_simple.geojson",
+                    what = "sp")
+fso_pop <- tibble(GRNR = 1:7,
+       POP = c(1593839,1842251,1128723,
+               1466424,1153485,790458,351946))
+
+fso@data <- merge(fso@data,fso_pop)
+pal <- colorNumeric("viridis", NULL)
+leaflet(fso) %>%
+    addTiles() %>%
+    addPolygons(stroke = FALSE,
+                smoothFactor = 0.3, fillOpacity = .6,
+                fillColor = ~pal(log10(POP)),
+    ) %>% 
+    addLegend(pal = pal,
+              title = "Population",
+              values = ~log10(POP), opacity = 1.0,
+              labFormat = labelFormat(transform = function(x) round(10^x)))
+```
+
+]
+
+
+---
+
+## Task 10:
+
+1. Download the Swiss FSO regions geojson file from the course github repo.
+
+2. Try to reproduce the FSO region population choropleth.
+
+- [Leaflet for R documentation](https://rstudio.github.io/leaflet/)
+
+- [Switzerland FSO Region geoJSON](https://github.com/mbannert/dh-2019/blob/master/session_5/data/ch_fso_simple.geojson)
+
+
+---
+
+
+## Further Reads on Spatial Visualization
+
+- [Robin Lovelace Advanced mapping](https://geocompr.robinlovelace.net/adv-map.html)
+- [Opendata Swiss for Shape files](http://opendata.swiss/)
+- [Timo Grossenbacher (SRF)](https://timogrossenbacher.ch/2016/12/beautiful-thematic-maps-with-ggplot2-only/)
+- [Rob Kabacoff Datavis](https://rkabacoff.github.io/datavis/)
+
+
+
+
 
 

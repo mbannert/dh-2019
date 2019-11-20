@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Hacking for Historians</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Matthias Bannert** (@whatsgoodio) and Ina Serif++" />
+    <meta name="date" content="2019-09-25" />
+    <link href="libs/remark-css/robot-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="more.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Hacking for Historians
+## Programming with Data
+### Matthias Bannert** (<span class="citation">@whatsgoodio</span>) and Ina Serif++
+### ETH Zurich**, Uni Basel++
+### 2019-09-25
+
+---
+
+
+
+
+
+
+## Exploring Built-In Data 
+
+Show all dataset available from currently loaded packages.
+
+```r
+data()
+```
+
+---
+
+
+## Exploring Built-In Data 
+
+Show all dataset available from currently loaded packages.
+
+```r
+data()
+```
+
+Load a specific dataset from the library *historydata*
+
+
+```r
+library(historydata)
+data("catholic_dioceses")
+```
+
+---
+
+
+
+## Exploring Built-In Data 
+
+Show all dataset available from currently loaded packages.
+
+```r
+data()
+```
+
+
+Load a specific dataset from the library *historydata*
+
+```r
+library(historydata)
+data("catholic_dioceses")
+```
+
+
+See what's in memory. &lt;br&gt; 
+Note that there can be multiple datasets in memory at the same time!
+
+
+```r
+data("paulist_missions")
+ls()
+```
+
+```
+## [1] "catholic_dioceses" "paulist_missions"
+```
+
+---
+
+
+## Types of datasets: time series
+
+
+```r
+ts2 &lt;- ts(rnorm(20),
+          start = c(1995,1),
+          frequency = 4)
+ts2
+```
+
+```
+##            Qtr1       Qtr2       Qtr3       Qtr4
+## 1995 -0.2907564  0.1119555 -1.4942559 -1.3083614
+## 1996 -0.6518433 -1.2581664  1.5104020 -1.1480505
+## 1997 -0.4678222  1.2059045 -1.3101211 -0.3418093
+## 1998  1.2048567 -1.1565097  0.6111807  0.7584561
+## 1999  0.3603295 -1.6534743 -0.2081901  0.4414633
+```
+
+examples: monthly revenues over time, stocks, aggregated log files
+
+---
+
+## Types of datasets: cross sectional data
+
+
+```r
+head(mtcars)
+```
+
+```
+##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+```
+
+- multiple variables
+- one period
+
+---
+
+## Types of datasets: panel data
+
+- multiple variables
+- longitudinal data 
+- e.g. German Socio-Economic Panel (GSOEP)
+
+---
+
+## Nested data structures
+
+
+```r
+l &lt;- list()
+l$element1 &lt;- 2
+l$element2 &lt;- head(mtcars,4)
+l
+```
+
+```
+## $element1
+## [1] 2
+## 
+## $element2
+##                 mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4      21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag  21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710     22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+```
+
+examples: meta information, sector classification (hierarchical), GDP components, translations, attributes, properties, [Geo spatial data](https://github.com/mbannert/maps/blob/master/ch_bfs_regions.geojson)
+
+---
+
+## Task 2:  Functions to Explore Dataset
+
+Try out some functions to explore datasets from the 
+*historydata*, *janeaustenr* and *fivethirtyeight*  packages or 
+R's built-in datasets.
+
+
+```r
+str()
+summary()
+length()
+nrow()
+class()
+pairs()
+plot()
+```
+
+Does each function work for with each dataset? Is the output of, e.g., summary the same for all datasets?
+
+
+&lt;!-- Represent each of the following dataset types using R: 
+
+- time series
+- cross section
+- panel
+- a nested structure.
+
+Please suggest an in-memory representation and a file based representation. --&gt;
+
+
+
+---
+
+&lt;!--
+
+- rendered slides (netlify)
+- task 1 + 2,3 other data related tasks. 
+- meetup
+- teamwork
+
+
+--&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
