@@ -119,7 +119,7 @@ dygraph(AirPassengers)
 
 class: center,middle
 
-## Layered Grammar of Graphics vs baseR - a comparison
+## Layered Grammar of Graphics vs baseR
 
 ---
 
@@ -251,12 +251,12 @@ source: [Towards Data Science Blog](https://towardsdatascience.com/a-comprehensi
 facet_wrap(~dataset, ncol = 3)`
 ```
 
-How does the plot change ?
+How does the plot change ? Discuss the logic
+behind this syntax (see also [{ggplot}'s facet function reference](https://ggplot2.tidyverse.org/reference/facet_wrap.html) .
 
 ---
 
-
-## High Level Plots: Leaflet
+## High Level Plots: Leaflet Example
 
 .pull-left[
 ```{r}
@@ -274,44 +274,57 @@ m
 ```
 
 For more information visit [R for Leaflet](https://rstudio.github.io/leaflet/).
-
-
-
-
 ]
 
+
 .pull-right[
-```{r, echo=FALSE}
+```{r, echo=FALSE,eval=TRUE}
 library(leaflet)
 m <- leaflet(data = loc) %>% 
     addTiles() %>% 
     addMarkers(~lng,~lat)
 m
+
 ```
 
 ]
 
 
 
+---
+
+## High Level Plots: Shape files 
+
+.pull-left[
+
+```{r,eval=FALSE}
+library(geojsonio)
+library(dplyr)
+library(leaflet)
+fso <- geojson_read("../data/ch_fso_simple.geojson",
+                    what = "sp")
+leaflet(fso) %>% 
+    addTiles() %>% 
+    addPolygons()
 
 
+```
 
+]
 
+]
 
+.pull-right[
+```{r, echo=FALSE,message=FALSE}
+library(geojsonio)
+library(dplyr)
+fso <- geojson_read("../data/ch_fso_simple.geojson",
+                    what = "sp")
+leaflet(fso) %>% 
+    addTiles() %>% 
+    addPolygons()
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+]
 
 
