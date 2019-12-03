@@ -1,0 +1,95 @@
+---
+title: "Hacking for Historians"
+subtitle: "Session 6 - Introduction to RMarkdown"
+author: "Matthias Bannert** (@whatsgoodio) and Ina Serif++"
+institute: "ETH Zurich**, Uni Basel++"
+date: "2019-12-04"
+output:
+  xaringan::moon_reader:
+    css: ["robot-fonts","more.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+class: center,middle
+
+### What is Markdown ?
+
+---
+
+class: center,middle
+
+## It's a <font color="#0000FF">mark-up</font> language. 
+
+---
+
+## Just like HTML. 
+
+```
+<div class="some-class">Just like HTML.</div>
+<bold>be bold</bold> or <it>italic</it>.
+<div id="be-right">or position stuff to the right</div>
+<div id="be-left">or to the left</div>
+
+```
+---
+
+
+class: center,middle
+
+### What is RMarkdown ?
+
+---
+
+class: center,middle
+
+### RMarkdown = R + Markdown
+
+---
+
+## RMarkdown = R + Markdown
+
+- markdown text: some * formatted text *
+    - bold and italic text
+    - lists
+    - headers (e.g., section titles)
+    - hyperlinks
+- R Code Chunks
+
+![chunk](codechunk.png)
+
+---
+
+## RMarkdown = R + Markdown
+
+```{r, echo=TRUE}
+plot(rnorm(100))
+```
+
+--- 
+
+---
+
+class: center, middle
+
+## Rendering Options Demo: From .pdf to HTML and MS Word
+      
+
+
+
+
+
+
+
+
+
+
