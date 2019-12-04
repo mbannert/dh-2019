@@ -74,7 +74,7 @@ Don't forget to tell us about what you are interested in, e.g., specific data so
 - [{ggplot2} function reference](https://ggplot2.tidyverse.org/reference/)
 - [{ggplot2} cheatsheet](https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf)
 - [Blog Towards Data Science: A Comprehensive Guide to the Grammar of Graphics for Effective Visualization of Multi-dimensional Data](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149)
-- [Introduction to R Studio](https://rmarkdown.rstudio.com/articles_intro.html)
+- [Introduction to R R Markdown](https://rmarkdown.rstudio.com/articles_intro.html)
 - [Bookdown: Rmarkdown the definitive Guide](https://bookdown.org/yihui/rmarkdown/)
 
 
