@@ -1,6 +1,6 @@
 ---
 title: "Hacking for Historians"
-subtitle: "Session 6 - Introduction to RMarkdown"
+subtitle: "Session 6 - Introduction to RMarkdown (and knitr)"
 author: "Matthias Bannert** (@whatsgoodio) and Ina Serif++"
 institute: "ETH Zurich**, Uni Basel++"
 date: "2019-12-04"
@@ -75,21 +75,35 @@ class: center,middle
 plot(rnorm(100))
 ```
 
---- 
+---
+
+## D-I-Y Example
+
+1. Make sure the {rmarkdown} package is installed and up-to-date. 
+2. Create a new RMarkdown file (.Rmd file extension). 
+
+<img src="newrmd.png" width="650px">
 
 ---
 
-class: center, middle
+## D-I-Y Example: Select HTML
 
-## Rendering Options Demo: From .pdf to HTML and MS Word
-      
+<img src="doctype.png" width="650px">
 
-
-
+---
 
 
+## D-I-Y Example: first_markdown.Rmd
+
+<img src="first_markdown.png" width="650px">
 
 
+---
 
+## Markdown Task
+
+1. Try to create a similar .Rmd file and create an HTML file from it. Take a look at it using your favorite web browser.
+
+2. Try other formats. Make sure the {knitr} package is installed and try to render to other formats such as .pdf or word.
 
 
