@@ -19,6 +19,11 @@ Raw slides can be found in the /slides subfolder of each session. However, knitt
 
 bi-weekly: 25.9, 9.10. 23.10, 6.11, 20.11, 4.12, 18.12
 
+### 18.12: The Q&A session
+
+Ask questions. Bring your own DH problems. Repeat content of previous sessions. 
+
+
 ### 4.12.: RMarkdown and Documents + Non-Programming Digital Tools
 
 The second but last session will give a short introduction to RMarkdown.
@@ -76,6 +81,6 @@ Don't forget to tell us about what you are interested in, e.g., specific data so
 - [Blog Towards Data Science: A Comprehensive Guide to the Grammar of Graphics for Effective Visualization of Multi-dimensional Data](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149)
 - [Introduction to R R Markdown](https://rmarkdown.rstudio.com/articles_intro.html)
 - [Bookdown: Rmarkdown the definitive Guide](https://bookdown.org/yihui/rmarkdown/)
-
-
+- [My Blogdown Based Site](https://whatsgood.io)
+- [CRAN Task View: Natural Language Processing](https://cran.r-project.org/web/views/NaturalLanguageProcessing.html)
 
