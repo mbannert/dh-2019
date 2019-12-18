@@ -54,7 +54,7 @@ Hint: Use mutate from the {dplyr} package to add age of authors to the data. Sho
 
 Hint: Look up the code from the session on visualization. 
 
-
+9. Embed the file you create to an R Markdown document (.Rmd) and render (knit) it to HTML. 
 
 
 
