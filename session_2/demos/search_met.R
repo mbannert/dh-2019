@@ -25,8 +25,63 @@ search_met <- function(keyword){
   fromJSON(url)
 }
 
+library(jsonlite)
+
+cats <- fromJSON("https://smb.museum-digital.de/json/objects?&s=katze")
+
+cats_2 <- fromJSON("https://smb.museum-digital.de/?s=&t=listen&extendQuery=katze&gbreitenat=101&output=json")
+cats_3 <- fromJSON("https://smb.museum-digital.de/?s=&t=listen&extendQuery=katze&gbreitenat=100&startwert=101&output=json")
+write.csv(cats, "docs/cats_smb.csv")
+
+cats <- fromJSON("https://smb.museum-digital.de/json/objects?&s=katze")
+
+for (i in cats$total[1]){
+  if (cats$total[1] > 100){
+    cat_list <- fromJSON("https://smb.museum-digital.de/?s=&t=listen&extendQuery=katze&gbreitenat=100&output=json")
+    cat_list <- rbind(cat_list, fromJSON(sprintf("https://smb.museum-digital.de/?s=&t=listen&extendQuery=katze&gbreitenat=%d&startwert=100&output=json", cats$total[1]-100)))
+    write.csv(cat_list, "Documents/GitHub/digital_history_intro/docs/cats_full.csv")
+  }
+  else{
+    write.csv(cats, "Documents/GitHub/digital_history_intro/docs/cats_smb.csv")
+    }
+}
+
+base_URL <- "https://smb.museum-digital.de/json/objects?&s=katze"
+cats <- fromJSON(base_URL)
+start <-  0
+breite <- 10
+iterations <- cats$total[1]%/%10 + 1
+endsize <- cats$total[1]-(iterations-1) * 10
+cat_list <- data.frame()
+for (i in 1:iterations){
+  if(i < iterations){
+    cat_list <- rbind(cat_list, fromJSON(paste(base_URL, "&gbreitenat=10&startwert=", start , sep="")))
+  } else {
+    cat_list <- rbind(cat_list,fromJSON(paste(base_URL, "&gbreitenat=", 
+                                                  endsize, "&startwert=", start, sep="")))
+  }
+  start <- start + 10
+  write.csv(cat_list, "Desktop/cat_list.csv")
+}
 
 
 
+ 
+# else{
+#    write.csv(cats, "docs/cats_smb.csv")
+#}
+#}
+
+sprintf("https://smb.museum-digital.de/?s=&t=listen&extendQuery=katze&gbreitenat=%d&startwert=101&output=json", cats$total[1]-100)
+cat_list <- fromJSON("https://smb.museum-digital.de/?s=&t=listen&extendQuery=katze&gbreitenat=100&output=json")
+cat_list_2 <- fromJSON(sprintf("https://smb.museum-digital.de/?s=&t=listen&extendQuery=katze&gbreitenat=%d&startwert=100&output=json", cats$total[1]-100))
+neu <- rbind(cat_list, cat_list_2)
+
+
+###
+
+library(jsonlite)
+library(rjson)
+armadillo <- fromJSON("https://catalog.archives.gov/api/v1/?q=armadillo")
 
 
